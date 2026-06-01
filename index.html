@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Executivo Financeiro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0D1B2A;
+    color: #E8EDF2;
+    min-height: 100vh;
+  }
+
+  /* ── UPLOAD SCREEN ── */
+  #upload-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .upload-logo {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: #8D9EB5;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+
+  .upload-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .upload-sub {
+    font-size: 15px;
+    color: #8D9EB5;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .upload-box {
+    background: #1B2D3F;
+    border: 1.5px dashed #2A4058;
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 580px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .upload-box:hover, .upload-box.drag-over {
+    border-color: #0984E3;
+    background: #1B3050;
+  }
+
+  .upload-box-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .upload-box-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+  }
+
+  .upload-box-sub {
+    font-size: 13px;
+    color: #8D9EB5;
+  }
+
+  input[type=file] { display: none; }
+
+  .file-list {
+    width: 100%;
+    max-width: 580px;
+    margin-bottom: 1.5rem;
+  }
+
+  .file-item {
+    background: #1B2D3F;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .file-item-icon { font-size: 20px; }
+  .file-item-name { flex: 1; color: #E8EDF2; font-weight: 500; }
+  .file-item-size { color: #8D9EB5; font-size: 12px; }
+  .file-item-ok { color: #00B894; font-size: 18px; }
+
+  .api-row {
+    width: 100%;
+    max-width: 580px;
+    margin-bottom: 1.5rem;
+  }
+
+  .api-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8D9EB5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .api-input-wrap {
+    display: flex;
+    gap: 8px;
+  }
+
+  .api-input {
+    flex: 1;
+    background: #1B2D3F;
+    border: 1px solid #2A4058;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #E8EDF2;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .api-input:focus { border-color: #0984E3; }
+
+  .api-save {
+    background: #1B2D3F;
+    border: 1px solid #2A4058;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #8D9EB5;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .api-save:hover { border-color: #0984E3; color: #0984E3; }
+  .api-hint { font-size: 11px; color: #4A5E72; margin-top: 6px; }
+
+  .btn-analyze {
+    width: 100%;
+    max-width: 580px;
+    background: #0984E3;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-analyze:hover { background: #0770C4; }
+  .btn-analyze:active { transform: scale(0.99); }
+  .btn-analyze:disabled { background: #2A4058; color: #4A5E72; cursor: not-allowed; }
+
+  /* ── LOADING ── */
+  #loading-screen {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .loading-spinner {
+    width: 56px;
+    height: 56px;
+    border: 3px solid #1B2D3F;
+    border-top-color: #0984E3;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .loading-step {
+    font-size: 14px;
+    color: #8D9EB5;
+    text-align: center;
+    max-width: 360px;
+    line-height: 1.6;
+  }
+
+  /* ── DASHBOARD ── */
+  #dashboard-screen {
+    display: none;
+    padding: 0;
+  }
+
+  .dash-header {
+    background: #0D1B2A;
+    border-bottom: 1px solid #1B2D3F;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .dash-header-left { display: flex; align-items: center; gap: 16px; }
+
+  .dash-badge {
+    background: #D63031;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .dash-title-main {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .dash-title-sub {
+    font-size: 12px;
+    color: #8D9EB5;
+  }
+
+  .btn-new {
+    background: transparent;
+    border: 1px solid #2A4058;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #8D9EB5;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-new:hover { border-color: #0984E3; color: #0984E3; }
+
+  .dash-body {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* TABS */
+  .dash-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #1B2D3F;
+  }
+
+  .dash-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8D9EB5;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .dash-tab.active {
+    color: #FFFFFF;
+    border-bottom-color: #0984E3;
+  }
+
+  .dash-panel { display: none; }
+  .dash-panel.active { display: block; }
+
+  /* METRIC CARDS */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .metric-card {
+    background: #1B2D3F;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid #243447;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8D9EB5;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .metric-value.red { color: #D63031; }
+  .metric-value.amber { color: #E17055; }
+  .metric-value.green { color: #00B894; }
+
+  .metric-sub {
+    font-size: 11px;
+    color: #4A5E72;
+  }
+
+  /* CHART CARDS */
+  .chart-card {
+    background: #1B2D3F;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #243447;
+  }
+
+  .chart-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+  }
+
+  .chart-card-sub {
+    font-size: 12px;
+    color: #8D9EB5;
+    margin-bottom: 1.25rem;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; }
+    .dash-body { padding: 1rem; }
+  }
+
+  /* SCORECARD */
+  .score-header {
+    display: grid;
+    grid-template-columns: 1fr 100px 120px 90px;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #243447;
+    border-radius: 8px 8px 0 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8D9EB5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 1rem;
+  }
+
+  .score-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 120px 90px;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #1B2D3F;
+    align-items: center;
+    background: #1B2D3F;
+    transition: background 0.15s;
+  }
+
+  .score-row:hover { background: #243447; }
+  .score-row:last-child { border-bottom: none; border-radius: 0 0 8px 8px; }
+
+  .score-name { font-size: 13px; color: #E8EDF2; }
+  .score-val { font-size: 13px; font-weight: 700; text-align: center; }
+  .score-bench { font-size: 12px; color: #8D9EB5; text-align: center; }
+
+  .score-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  .score-badge.ok { background: #0A3D2B; color: #00B894; }
+  .score-badge.warn { background: #3D2A1A; color: #E17055; }
+  .score-badge.danger { background: #3D1A1A; color: #D63031; }
+
+  /* INSIGHT CARDS */
+  .insight-card {
+    background: #1B2D3F;
+    border: 1px solid #243447;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .insight-card.danger { border-left: 3px solid #D63031; }
+  .insight-card.warn { border-left: 3px solid #E17055; }
+  .insight-card.ok { border-left: 3px solid #00B894; }
+
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+  }
+
+  .insight-body {
+    font-size: 13px;
+    color: #8D9EB5;
+    line-height: 1.7;
+  }
+
+  /* AI ANALYSIS CONTENT */
+  #ai-content { line-height: 1.7; }
+
+  #ai-content h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 2rem 0 1rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #243447;
+  }
+
+  #ai-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #E8EDF2;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  #ai-content p {
+    font-size: 14px;
+    color: #8D9EB5;
+    margin-bottom: 0.75rem;
+  }
+
+  #ai-content ul, #ai-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #ai-content li {
+    font-size: 14px;
+    color: #8D9EB5;
+    margin-bottom: 6px;
+  }
+
+  #ai-content strong { color: #E8EDF2; font-weight: 600; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8D9EB5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #8D9EB5;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .summary-bar {
+    background: #1B2D3F;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 3px solid #D63031;
+  }
+
+  .summary-bar-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #D63031;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .summary-bar-text {
+    font-size: 14px;
+    color: #8D9EB5;
+    line-height: 1.6;
+  }
+
+  .period-tag {
+    font-size: 12px;
+    color: #4A5E72;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ TELA 1: UPLOAD ══ -->
+<div id="upload-screen">
+  <div class="upload-logo">Varejo de Supermercados · Dashboard Executivo</div>
+  <div class="upload-title">Análise Financeira com IA</div>
+  <div class="upload-sub">Envie os arquivos do período e o dashboard é gerado automaticamente</div>
+
+  <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
+    <span class="upload-box-icon">📂</span>
+    <div class="upload-box-title">Clique ou arraste os arquivos aqui</div>
+    <div class="upload-box-sub">Balanço Patrimonial + DRE · PDF ou imagem</div>
+  </div>
+
+  <input type="file" id="file-input" multiple accept=".pdf,.png,.jpg,.jpeg" onchange="handleFiles(this.files)">
+
+  <div class="file-list" id="file-list"></div>
+
+  <div class="api-row">
+    <label class="api-label">Chave de API Anthropic</label>
+    <div class="api-input-wrap">
+      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-..." value="">
+      <button class="api-save" onclick="saveKey()">Salvar</button>
+    </div>
+    <div class="api-hint">Obtenha grátis em console.anthropic.com · Salva no seu navegador, ninguém mais acessa</div>
+  </div>
+
+  <button class="btn-analyze" id="btn-analyze" onclick="startAnalysis()" disabled>
+    Gerar Dashboard Executivo
+  </button>
+</div>
+
+<!-- ══ TELA 2: LOADING ══ -->
+<div id="loading-screen">
+  <div class="loading-spinner"></div>
+  <div class="loading-title">Analisando documentos...</div>
+  <div class="loading-step" id="loading-step">Lendo o Balanço Patrimonial e a DRE</div>
+</div>
+
+<!-- ══ TELA 3: DASHBOARD ══ -->
+<div id="dashboard-screen">
+
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="dash-badge" id="dash-alert-badge">⚠ MARGEM CRÍTICA</div>
+      <div>
+        <div class="dash-title-main" id="dash-title">Dashboard Executivo Financeiro</div>
+        <div class="dash-title-sub period-tag" id="dash-period">Carregando...</div>
+      </div>
+    </div>
+    <button class="btn-new" onclick="resetApp()">↑ Nova Análise</button>
+  </div>
+
+  <div class="dash-body">
+
+    <div class="summary-bar" id="summary-bar">
+      <div class="summary-bar-title" id="summary-title">Diagnóstico</div>
+      <div class="summary-bar-text" id="summary-text">Carregando análise...</div>
+    </div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="switchTab('visao-geral')">Visão Geral</button>
+      <button class="dash-tab" onclick="switchTab('dre')">DRE & Margens</button>
+      <button class="dash-tab" onclick="switchTab('balanco')">Balanço</button>
+      <button class="dash-tab" onclick="switchTab('scorecard')">Scorecard</button>
+      <button class="dash-tab" onclick="switchTab('diagnostico')">Diagnóstico IA</button>
+    </div>
+
+    <!-- TAB: VISÃO GERAL -->
+    <div class="dash-panel active" id="panel-visao-geral">
+      <div class="metric-grid" id="kpi-grid"></div>
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-card-title">Cascata DRE — Do faturamento ao lucro</div>
+          <div class="chart-card-sub">Onde o dinheiro é consumido ao longo do resultado</div>
+          <div style="position:relative;height:300px"><canvas id="chart-funnel" role="img" aria-label="Cascata DRE"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Margens vs. Benchmark do setor</div>
+          <div class="chart-card-sub">Empresa comparada às referências supermercadistas</div>
+          <div class="legend-row">
+            <span class="legend-item"><span class="legend-dot" style="background:#0984E3"></span>Empresa</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#2A4058"></span>Mín. setor</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#4A5E72"></span>Máx. setor</span>
+          </div>
+          <div style="position:relative;height:260px"><canvas id="chart-margens" role="img" aria-label="Margens comparativas"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: DRE -->
+    <div class="dash-panel" id="panel-dre">
+      <div class="metric-grid" id="dre-kpis"></div>
+      <div class="chart-card">
+        <div class="chart-card-title">Composição das Despesas Operacionais</div>
+        <div class="chart-card-sub">Distribuição dos custos que consomem o resultado bruto</div>
+        <div style="position:relative;height:320px"><canvas id="chart-despesas" role="img" aria-label="Composição despesas"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TAB: BALANÇO -->
+    <div class="dash-panel" id="panel-balanco">
+      <div class="metric-grid" id="balanco-kpis"></div>
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-card-title">Composição do Ativo Circulante</div>
+          <div class="chart-card-sub">Distribuição dos ativos de curto prazo</div>
+          <div style="position:relative;height:280px"><canvas id="chart-ativo" role="img" aria-label="Ativo circulante"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Estrutura do Passivo Circulante</div>
+          <div class="chart-card-sub">Obrigações de curto prazo por categoria</div>
+          <div style="position:relative;height:280px"><canvas id="chart-passivo" role="img" aria-label="Passivo circulante"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SCORECARD -->
+    <div class="dash-panel" id="panel-scorecard">
+      <div class="metric-grid" style="max-width:500px;margin-bottom:1.5rem">
+        <div class="metric-card"><div class="metric-label">Dentro do benchmark</div><div class="metric-value green" id="sc-ok">—</div></div>
+        <div class="metric-card"><div class="metric-label">Zona de atenção</div><div class="metric-value amber" id="sc-warn">—</div></div>
+        <div class="metric-card"><div class="metric-label">Zona crítica</div><div class="metric-value red" id="sc-danger">—</div></div>
+      </div>
+      <div class="score-header">
+        <span>Indicador</span>
+        <span style="text-align:center">Empresa</span>
+        <span style="text-align:center">Benchmark</span>
+        <span style="text-align:center">Status</span>
+      </div>
+      <div id="scorecard-rows"></div>
+    </div>
+
+    <!-- TAB: DIAGNÓSTICO IA -->
+    <div class="dash-panel" id="panel-diagnostico">
+      <div id="insight-cards"></div>
+      <div class="chart-card">
+        <div class="chart-card-title">Análise completa gerada pela IA</div>
+        <div class="chart-card-sub">Diagnóstico detalhado baseado nos documentos enviados</div>
+        <div id="ai-content"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let uploadedFiles = [];
+let dashData = null;
+
+// ── KEY MANAGEMENT ──
+function saveKey() {
+  const k = document.getElementById('api-key-input').value.trim();
+  if (k) {
+    localStorage.setItem('anthro_key', k);
+    alert('Chave salva no seu navegador!');
+  }
+}
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('anthro_key');
+  if (saved) document.getElementById('api-key-input').value = saved;
+  checkReady();
+});
+
+// ── FILE HANDLING ──
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  for (const f of files) uploadedFiles.push(f);
+  renderFileList();
+  checkReady();
+}
+
+function renderFileList() {
+  const list = document.getElementById('file-list');
+  list.innerHTML = uploadedFiles.map((f, i) => `
+    <div class="file-item">
+      <span class="file-item-icon">📄</span>
+      <span class="file-item-name">${f.name}</span>
+      <span class="file-item-size">${(f.size/1024).toFixed(0)} KB</span>
+      <span class="file-item-ok">✓</span>
+    </div>
+  `).join('');
+}
+
+function checkReady() {
+  const hasFiles = uploadedFiles.length > 0;
+  const hasKey = document.getElementById('api-key-input').value.trim().length > 10;
+  document.getElementById('btn-analyze').disabled = !(hasFiles && hasKey);
+}
+
+document.getElementById('api-key-input').addEventListener('input', checkReady);
+
+// ── FILE TO BASE64 ──
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── MAIN ANALYSIS ──
+async function startAnalysis() {
+  const apiKey = document.getElementById('api-key-input').value.trim();
+  localStorage.setItem('anthro_key', apiKey);
+
+  showScreen('loading');
+
+  const steps = [
+    'Lendo o Balanço Patrimonial e a DRE...',
+    'Calculando indicadores financeiros...',
+    'Comparando com benchmarks do setor...',
+    'Gerando diagnóstico estratégico...',
+    'Montando o dashboard executivo...'
+  ];
+
+  let stepIdx = 0;
+  const stepEl = document.getElementById('loading-step');
+  const stepInterval = setInterval(() => {
+    if (stepIdx < steps.length - 1) { stepIdx++; stepEl.textContent = steps[stepIdx]; }
+  }, 3500);
+
+  try {
+    const contents = [];
+    for (const file of uploadedFiles) {
+      const b64 = await fileToBase64(file);
+      const isPdf = file.type === 'application/pdf';
+      if (isPdf) {
+        contents.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 } });
+      } else {
+        contents.push({ type: 'image', source: { type: 'base64', media_type: file.type, data: b64 } });
+      }
+    }
+
+    contents.push({
+      type: 'text',
+      text: `Você é um consultor estratégico financeiro especialista em varejo de supermercados brasileiro.
+
+Analise TODOS os documentos financeiros enviados (Balanço Patrimonial e DRE) e retorne SOMENTE um objeto JSON válido, sem markdown, sem texto adicional, com EXATAMENTE esta estrutura:
+
+{
+  "periodo": "string com o período identificado (ex: Ano Fiscal 2025)",
+  "empresa": "string com nome ou descrição da empresa se identificável",
+  "alerta_badge": "string curta de alerta (ex: MARGEM CRÍTICA 0,52%)",
+  "summary_title": "string título do diagnóstico principal",
+  "summary_text": "string com 1-2 frases do diagnóstico executivo mais importante",
+  "kpis_principais": [
+    {"label": "string", "valor": "string", "sub": "string", "cor": "green|amber|red|white"}
+  ],
+  "dre": {
+    "receita_bruta": number,
+    "deducoes": number,
+    "receita_liquida": number,
+    "cmv": number,
+    "resultado_bruto": number,
+    "despesas_operacionais": number,
+    "resultado_financeiro": number,
+    "lucro_liquido": number,
+    "margem_bruta_pct": number,
+    "margem_ebit_pct": number,
+    "margem_liquida_pct": number
+  },
+  "balanco": {
+    "ativo_total": number,
+    "ativo_circulante": number,
+    "estoques": number,
+    "cartoes_receber": number,
+    "disponibilidades": number,
+    "aplicacoes": number,
+    "outros_ativo_circ": number,
+    "ativo_nao_circ": number,
+    "passivo_circulante": number,
+    "fornecedores": number,
+    "obrig_fiscais": number,
+    "obrig_trabalhistas": number,
+    "provisoes": number,
+    "outros_passivo_circ": number,
+    "passivo_lp": number,
+    "patrimonio_liquido": number
+  },
+  "scorecard": [
+    {
+      "categoria": "string",
+      "nome": "string",
+      "valor": "string",
+      "benchmark": "string",
+      "status": "ok|warn|danger",
+      "observacao": "string com análise de 1 frase"
+    }
+  ],
+  "insights": [
+    {
+      "tipo": "danger|warn|ok",
+      "titulo": "string",
+      "texto": "string com análise detalhada de 2-3 frases"
+    }
+  ],
+  "analise_completa": "string com análise estratégica completa em markdown, incluindo: 1) Sumário executivo, 2) Diagnóstico da DRE, 3) Diagnóstico do Balanço, 4) Cruzamento das duas demonstrações, 5) Pontos críticos e fortalezas. Mínimo 800 palavras."
+}
+
+REGRAS:
+- Todos os valores monetários em milhões de reais (number, sem símbolo)
+- Percentuais como número decimal (ex: 20.7 para 20,7%)
+- scorecard deve ter no mínimo 10 indicadores cobrindo rentabilidade, liquidez, ciclo e estrutura
+- insights deve ter no mínimo 4 itens
+- Retorne APENAS o JSON, sem nenhum texto antes ou depois`
+    });
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: contents }]
+      })
+    });
+
+    clearInterval(stepInterval);
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'Erro na API');
+    }
+
+    const data = await response.json();
+    const rawText = data.content.map(c => c.text || '').join('');
+    const clean = rawText.replace(/```json|```/g, '').trim();
+    dashData = JSON.parse(clean);
+
+    renderDashboard(dashData);
+    showScreen('dashboard');
+
+  } catch (err) {
+    clearInterval(stepInterval);
+    showScreen('upload');
+    alert('Erro na análise: ' + err.message + '\n\nVerifique se a chave de API está correta.');
+  }
+}
+
+// ── RENDER DASHBOARD ──
+function renderDashboard(d) {
+  // Header
+  document.getElementById('dash-alert-badge').textContent = '⚠ ' + (d.alerta_badge || 'ANÁLISE CONCLUÍDA');
+  document.getElementById('dash-title').textContent = 'Dashboard Executivo · ' + (d.empresa || 'Supermercado');
+  document.getElementById('dash-period').textContent = d.periodo || '';
+  document.getElementById('summary-title').textContent = d.summary_title || 'Diagnóstico';
+  document.getElementById('summary-text').textContent = d.summary_text || '';
+
+  // KPIs principais
+  const kpiGrid = document.getElementById('kpi-grid');
+  kpiGrid.innerHTML = (d.kpis_principais || []).map(k => `
+    <div class="metric-card">
+      <div class="metric-label">${k.label}</div>
+      <div class="metric-value ${k.cor || 'white'}">${k.valor}</div>
+      <div class="metric-sub">${k.sub || ''}</div>
+    </div>
+  `).join('');
+
+  // DRE KPIs
+  const dre = d.dre || {};
+  document.getElementById('dre-kpis').innerHTML = `
+    <div class="metric-card"><div class="metric-label">Receita Bruta</div><div class="metric-value white">R$ ${fmt(dre.receita_bruta)}M</div></div>
+    <div class="metric-card"><div class="metric-label">Receita Líquida</div><div class="metric-value white">R$ ${fmt(dre.receita_liquida)}M</div></div>
+    <div class="metric-card"><div class="metric-label">CMV</div><div class="metric-value amber">R$ ${fmt(dre.cmv)}M</div><div class="metric-sub">${dre.receita_liquida ? ((dre.cmv/dre.receita_liquida)*100).toFixed(1) : '—'}% da rec. líq.</div></div>
+    <div class="metric-card"><div class="metric-label">Resultado Bruto</div><div class="metric-value white">R$ ${fmt(dre.resultado_bruto)}M</div><div class="metric-sub">Margem ${fmt(dre.margem_bruta_pct)}%</div></div>
+    <div class="metric-card"><div class="metric-label">Desp. Operacionais</div><div class="metric-value red">R$ ${fmt(dre.despesas_operacionais)}M</div></div>
+    <div class="metric-card"><div class="metric-label">Lucro Líquido</div><div class="metric-value ${dre.lucro_liquido > 0 ? 'green' : 'red'}">R$ ${fmt(dre.lucro_liquido)}M</div><div class="metric-sub">Margem ${fmt(dre.margem_liquida_pct)}%</div></div>
+  `;
+
+  // Balanço KPIs
+  const b = d.balanco || {};
+  document.getElementById('balanco-kpis').innerHTML = `
+    <div class="metric-card"><div class="metric-label">Ativo Total</div><div class="metric-value white">R$ ${fmt(b.ativo_total)}M</div></div>
+    <div class="metric-card"><div class="metric-label">Estoques</div><div class="metric-value amber">R$ ${fmt(b.estoques)}M</div><div class="metric-sub">${b.ativo_circulante ? ((b.estoques/b.ativo_circulante)*100).toFixed(1) : '—'}% do AC</div></div>
+    <div class="metric-card"><div class="metric-label">Liquidez Corrente</div><div class="metric-value ${lcStatus(b)}">${b.ativo_circulante && b.passivo_circulante ? (b.ativo_circulante/b.passivo_circulante).toFixed(2) : '—'}</div></div>
+    <div class="metric-card"><div class="metric-label">Liquidez Seca</div><div class="metric-value ${lsStatus(b)}">${b.ativo_circulante && b.passivo_circulante ? ((b.ativo_circulante - b.estoques)/b.passivo_circulante).toFixed(2) : '—'}</div></div>
+    <div class="metric-card"><div class="metric-label">Patrimônio Líquido</div><div class="metric-value green">R$ ${fmt(b.patrimonio_liquido)}M</div></div>
+    <div class="metric-card"><div class="metric-label">Fornecedores</div><div class="metric-value amber">R$ ${fmt(b.fornecedores)}M</div></div>
+  `;
+
+  // Scorecard
+  const sc = d.scorecard || [];
+  let ok = 0, warn = 0, danger = 0;
+  sc.forEach(s => { if (s.status==='ok') ok++; else if (s.status==='warn') warn++; else danger++; });
+  document.getElementById('sc-ok').textContent = ok;
+  document.getElementById('sc-warn').textContent = warn;
+  document.getElementById('sc-danger').textContent = danger;
+
+  document.getElementById('scorecard-rows').innerHTML = sc.map(s => `
+    <div class="score-row">
+      <div>
+        <div class="score-name">${s.nome}</div>
+        ${s.observacao ? `<div style="font-size:11px;color:#4A5E72;margin-top:3px">${s.observacao}</div>` : ''}
+      </div>
+      <div class="score-val" style="color:${s.status==='ok'?'#00B894':s.status==='warn'?'#E17055':'#D63031'}">${s.valor}</div>
+      <div class="score-bench">${s.benchmark}</div>
+      <div><span class="score-badge ${s.status}">${s.status==='ok'?'OK':s.status==='warn'?'ATENÇÃO':'CRÍTICO'}</span></div>
+    </div>
+  `).join('');
+
+  // Insights
+  document.getElementById('insight-cards').innerHTML = (d.insights || []).map(ins => `
+    <div class="insight-card ${ins.tipo}">
+      <div class="insight-title">${ins.titulo}</div>
+      <div class="insight-body">${ins.texto}</div>
+    </div>
+  `).join('');
+
+  // Análise completa
+  const analise = d.analise_completa || '';
+  document.getElementById('ai-content').innerHTML = analise
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hul])(.+)$/gm, '<p>$1</p>');
+
+  // Charts
+  setTimeout(() => {
+    renderCharts(d);
+  }, 100);
+}
+
+function fmt(n) {
+  if (n === undefined || n === null) return '—';
+  return Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+function lcStatus(b) {
+  if (!b.ativo_circulante || !b.passivo_circulante) return 'white';
+  const lc = b.ativo_circulante / b.passivo_circulante;
+  return lc >= 1.5 ? 'green' : lc >= 1.0 ? 'amber' : 'red';
+}
+
+function lsStatus(b) {
+  if (!b.ativo_circulante || !b.passivo_circulante || !b.estoques) return 'white';
+  const ls = (b.ativo_circulante - b.estoques) / b.passivo_circulante;
+  return ls >= 1.0 ? 'green' : ls >= 0.8 ? 'amber' : 'red';
+}
+
+// ── CHARTS ──
+const chartInstances = {};
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function renderCharts(d) {
+  const dre = d.dre || {};
+  const b = d.balanco || {};
+
+  // Funnel DRE
+  destroyChart('chart-funnel');
+  const funnelCtx = document.getElementById('chart-funnel');
+  if (funnelCtx) {
+    chartInstances['chart-funnel'] = new Chart(funnelCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Rec. Bruta', 'Rec. Líquida', 'Res. Bruto', 'Desp. Op.', 'Lucro Líq.'],
+        datasets: [{
+          data: [dre.receita_bruta, dre.receita_liquida, dre.resultado_bruto, dre.despesas_operacionais, dre.lucro_liquido],
+          backgroundColor: ['#0984E3', '#378ADD', '#00B894', '#D63031', '#00B894'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` R$ ${fmt(ctx.parsed.y)}M` } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#8D9EB5', font: { size: 11 } } },
+          y: { grid: { color: '#1B2D3F' }, ticks: { color: '#8D9EB5', callback: v => 'R$' + fmt(v) + 'M' } }
+        }
+      }
+    });
+  }
+
+  // Margens
+  destroyChart('chart-margens');
+  const margensCtx = document.getElementById('chart-margens');
+  if (margensCtx) {
+    chartInstances['chart-margens'] = new Chart(margensCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Margem Bruta', 'Margem EBIT', 'Margem Líquida'],
+        datasets: [
+          { label: 'Empresa', data: [dre.margem_bruta_pct, dre.margem_ebit_pct, dre.margem_liquida_pct], backgroundColor: '#0984E3', borderRadius: 4 },
+          { label: 'Mín. setor', data: [22, 3, 1], backgroundColor: '#2A4058', borderRadius: 4 },
+          { label: 'Máx. setor', data: [26, 6, 3], backgroundColor: '#4A5E72', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#8D9EB5', font: { size: 11 } } },
+          y: { grid: { color: '#1B2D3F' }, ticks: { color: '#8D9EB5', callback: v => v + '%' } }
+        }
+      }
+    });
+  }
+
+  // Ativo circulante
+  destroyChart('chart-ativo');
+  const ativoCtx = document.getElementById('chart-ativo');
+  if (ativoCtx) {
+    chartInstances['chart-ativo'] = new Chart(ativoCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Estoques', 'Cartões a receber', 'Disponibilidades', 'Aplicações', 'Outros'],
+        datasets: [{
+          data: [b.estoques, b.cartoes_receber, b.disponibilidades, b.aplicacoes, b.outros_ativo_circ],
+          backgroundColor: ['#D63031', '#0984E3', '#00B894', '#E17055', '#4A5E72'],
+          borderWidth: 2, borderColor: '#1B2D3F'
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#8D9EB5', font: { size: 11 }, padding: 12, boxWidth: 12 } },
+          tooltip: { callbacks: { label: ctx => ` R$ ${fmt(ctx.parsed)}M` } }
+        }
+      }
+    });
+  }
+
+  // Passivo circulante
+  destroyChart('chart-passivo');
+  const passivoCtx = document.getElementById('chart-passivo');
+  if (passivoCtx) {
+    chartInstances['chart-passivo'] = new Chart(passivoCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Fornecedores', 'Obrig. fiscais', 'Obrig. trabalhistas', 'Provisões', 'Outros'],
+        datasets: [{
+          data: [b.fornecedores, b.obrig_fiscais, b.obrig_trabalhistas, b.provisoes, b.outros_passivo_circ],
+          backgroundColor: ['#E17055', '#0984E3', '#00B894', '#D63031', '#4A5E72'],
+          borderWidth: 2, borderColor: '#1B2D3F'
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#8D9EB5', font: { size: 11 }, padding: 12, boxWidth: 12 } },
+          tooltip: { callbacks: { label: ctx => ` R$ ${fmt(ctx.parsed)}M` } }
+        }
+      }
+    });
+  }
+
+  // Despesas
+  destroyChart('chart-despesas');
+  const despCtx = document.getElementById('chart-despesas');
+  if (despCtx) {
+    chartInstances['chart-despesas'] = new Chart(despCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Resultado Bruto', 'Despesas Operacionais', 'Resultado Financeiro', 'Lucro Líquido'],
+        datasets: [{
+          data: [dre.resultado_bruto, dre.despesas_operacionais, dre.resultado_financeiro, dre.lucro_liquido],
+          backgroundColor: ['#00B894', '#D63031', '#0984E3', '#00B894'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` R$ ${fmt(ctx.parsed.y)}M` } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#8D9EB5' } },
+          y: { grid: { color: '#1B2D3F' }, ticks: { color: '#8D9EB5', callback: v => 'R$' + fmt(v) + 'M' } }
+        }
+      }
+    });
+  }
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+  setTimeout(() => { if (dashData) renderCharts(dashData); }, 50);
+}
+
+// ── SCREENS ──
+function showScreen(name) {
+  document.getElementById('upload-screen').style.display = name === 'upload' ? 'flex' : 'none';
+  document.getElementById('loading-screen').style.display = name === 'loading' ? 'flex' : 'none';
+  document.getElementById('dashboard-screen').style.display = name === 'dashboard' ? 'block' : 'none';
+}
+
+function resetApp() {
+  uploadedFiles = [];
+  dashData = null;
+  document.getElementById('file-list').innerHTML = '';
+  checkReady();
+  showScreen('upload');
+}
+</script>
+</body>
+</html>
