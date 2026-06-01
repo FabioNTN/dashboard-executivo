@@ -3,547 +3,698 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Executivo Financeiro</title>
+<title>Dashboard Executivo — Villa Simpatia 2020–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0D1B2A;color:#E8EDF2;min-height:100vh}
+:root{
+  --navy:#0D1B2A;--navy2:#1B2D3F;--navy3:#243447;
+  --white:#FFFFFF;--off:#F4F6F8;
+  --gray:#8D9EB5;--gray2:#4A5E72;--gray3:#2A4058;
+  --red:#D63031;--red2:#FCEBEB;--red3:#791F1F;
+  --amber:#E17055;--amber2:#FAEEDA;--amber3:#633806;
+  --green:#00B894;--green2:#EAF3DE;--green3:#27500A;
+  --blue:#0984E3;--blue2:#E6F1FB;--blue3:#185FA5;
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--navy);color:#E8EDF2;min-height:100vh;font-size:14px}
 
-#upload-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
-.up-logo{font-size:11px;font-weight:600;letter-spacing:.1em;color:#8D9EB5;margin-bottom:1.5rem;text-transform:uppercase}
-.up-title{font-size:30px;font-weight:700;color:#fff;text-align:center;margin-bottom:6px;line-height:1.2}
-.up-sub{font-size:14px;color:#8D9EB5;text-align:center;margin-bottom:2.5rem}
+/* ── HEADER ── */
+.header{background:var(--navy);border-bottom:1px solid var(--navy3);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:200}
+.header-left{display:flex;align-items:center;gap:14px}
+.header-logo{font-family:var(--serif);font-size:18px;color:var(--white)}
+.header-period{font-size:11px;color:var(--gray);background:var(--navy3);padding:4px 10px;border-radius:6px}
+.header-alert{background:var(--red);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;letter-spacing:.04em;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
 
-.up-box{background:#1B2D3F;border:1.5px dashed #2A4058;border-radius:16px;padding:2rem;width:100%;max-width:560px;text-align:center;margin-bottom:1.25rem;cursor:pointer;transition:border-color .2s,background .2s}
-.up-box:hover,.up-box.drag{border-color:#0984E3;background:#1B3050}
-.up-box-icon{font-size:36px;margin-bottom:10px;display:block}
-.up-box-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
-.up-box-sub{font-size:12px;color:#8D9EB5}
-input[type=file]{display:none}
+/* ── HERO ── */
+.hero{padding:2rem 2rem 1.5rem;background:linear-gradient(180deg,var(--navy2) 0%,var(--navy) 100%);border-bottom:1px solid var(--navy3)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;gap:12px;margin-bottom:1.5rem}
+@media(max-width:900px){.hero-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.hero-grid{grid-template-columns:repeat(2,1fr)}}
+.hero-card{background:var(--navy3);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);transition:transform .2s}
+.hero-card:hover{transform:translateY(-2px)}
+.hc-label{font-size:10px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.hc-val{font-size:22px;font-weight:600;line-height:1;margin-bottom:3px}
+.hc-val.r{color:var(--red)}.hc-val.a{color:var(--amber)}.hc-val.g{color:var(--green)}
+.hc-sub{font-size:10px;color:var(--gray2)}
+.hero-headline{background:rgba(214,48,49,.12);border:1px solid rgba(214,48,49,.3);border-radius:10px;padding:12px 16px;font-size:13px;color:#ffb3b3;line-height:1.6}
+.hero-headline strong{color:#fff;font-weight:600}
 
-.file-list{width:100%;max-width:560px;margin-bottom:1.25rem}
-.file-item{background:#1B2D3F;border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:13px}
-.fi-icon{font-size:18px}.fi-name{flex:1;color:#E8EDF2;font-weight:500}.fi-size{color:#8D9EB5;font-size:11px}.fi-ok{color:#00B894}
+/* ── TABS ── */
+.tabs-wrap{background:var(--navy);border-bottom:1px solid var(--navy3);padding:0 2rem;position:sticky;top:61px;z-index:100}
+.tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 20px;font-size:12px;font-weight:600;color:var(--gray);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s;letter-spacing:.02em}
+.tab.on{color:var(--white);border-bottom-color:var(--blue)}
+.tab:hover:not(.on){color:#cdd5df}
 
-.api-row{width:100%;max-width:560px;margin-bottom:1.25rem}
-.api-label{font-size:11px;font-weight:600;color:#8D9EB5;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.api-badge{background:#1B3050;color:#378ADD;font-size:10px;padding:2px 8px;border-radius:6px;font-weight:600}
-.api-wrap{display:flex;gap:8px}
-.api-input{flex:1;background:#1B2D3F;border:1px solid #2A4058;border-radius:10px;padding:11px 14px;color:#E8EDF2;font-size:13px;outline:none;transition:border-color .2s}
-.api-input:focus{border-color:#0984E3}
-.api-save{background:#1B2D3F;border:1px solid #2A4058;border-radius:10px;padding:11px 14px;color:#8D9EB5;font-size:12px;cursor:pointer;transition:all .2s;white-space:nowrap}
-.api-save:hover{border-color:#0984E3;color:#0984E3}
-.api-hint{font-size:11px;color:#4A5E72;margin-top:5px}
-.api-hint a{color:#378ADD;text-decoration:none}
+/* ── BODY ── */
+.body{max-width:1300px;margin:0 auto;padding:1.5rem 2rem 3rem}
+@media(max-width:640px){.body{padding:1rem}}
 
-.btn-go{width:100%;max-width:560px;background:#0984E3;border:none;border-radius:12px;padding:15px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
-.btn-go:hover{background:#0770C4}
-.btn-go:disabled{background:#2A4058;color:#4A5E72;cursor:not-allowed}
+.panel{display:none}.panel.on{display:block}
 
-#loading-screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.spin{width:52px;height:52px;border:3px solid #1B2D3F;border-top-color:#0984E3;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.load-title{font-size:18px;font-weight:600;color:#fff}
-.load-step{font-size:13px;color:#8D9EB5;text-align:center;max-width:340px;line-height:1.6}
+/* ── SECTION LABELS ── */
+.sec{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px;margin-top:1.5rem;padding-bottom:8px;border-bottom:1px solid var(--navy3)}
+.sec:first-child{margin-top:0}
 
-#dash-screen{display:none}
-.dash-header{background:#0D1B2A;border-bottom:1px solid #1B2D3F;padding:.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
-.dh-left{display:flex;align-items:center;gap:12px}
-.dh-badge{background:#D63031;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.04em}
-.dh-title{font-size:15px;font-weight:700;color:#fff}
-.dh-sub{font-size:11px;color:#8D9EB5;margin-top:1px}
-.btn-new{background:transparent;border:1px solid #2A4058;border-radius:8px;padding:7px 14px;color:#8D9EB5;font-size:12px;cursor:pointer;transition:all .2s}
-.btn-new:hover{border-color:#0984E3;color:#0984E3}
-
-.dash-body{max-width:1200px;margin:0 auto;padding:1.5rem}
-
-.d-tabs{display:flex;gap:2px;margin-bottom:1.25rem;border-bottom:1px solid #1B2D3F;flex-wrap:wrap}
-.d-tab{padding:8px 16px;font-size:12px;font-weight:600;color:#8D9EB5;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:color .15s;white-space:nowrap}
-.d-tab.on{color:#fff;border-bottom-color:#0984E3}
-
-.d-panel{display:none}.d-panel.on{display:block}
-
-.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.25rem}
-.kcard{background:#1B2D3F;border-radius:10px;padding:12px 14px;border:1px solid #243447}
-.klabel{font-size:10px;font-weight:600;color:#8D9EB5;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.kval{font-size:22px;font-weight:700;color:#fff;line-height:1;margin-bottom:3px}
-.kval.r{color:#D63031}.kval.a{color:#E17055}.kval.g{color:#00B894}
-.ksub{font-size:10px;color:#4A5E72}
-
-.ccard{background:#1B2D3F;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;border:1px solid #243447}
-.ctitle{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
-.csub{font-size:11px;color:#8D9EB5;margin-bottom:1rem}
+/* ── CARDS ── */
+.card{background:var(--navy2);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;border:1px solid var(--navy3)}
+.card-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px}
+.card-sub{font-size:11px;color:var(--gray);margin-bottom:1rem}
 
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
-@media(max-width:640px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
 
-.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
-.li{display:flex;align-items:center;gap:4px;font-size:11px;color:#8D9EB5}
-.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+/* ── KPIS GRID ── */
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
+.kc{background:var(--navy3);border-radius:10px;padding:12px 14px}
+.kl{font-size:10px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.kv{font-size:20px;font-weight:600;line-height:1;margin-bottom:3px}
+.kv.r{color:var(--red)}.kv.a{color:var(--amber)}.kv.g{color:var(--green)}
+.ks{font-size:10px;color:var(--gray2)}
 
-.fun{display:flex;flex-direction:column;gap:5px;padding:4px 0}
+/* ── FUNNEL ── */
+.fun{display:flex;flex-direction:column;gap:5px}
 .fr{display:flex;align-items:center;gap:8px}
-.fl{width:160px;font-size:11px;color:#8D9EB5;flex-shrink:0;text-align:right}
-.fb-w{flex:1;height:24px;background:#0D1B2A;border-radius:3px;overflow:hidden}
-.fb{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px}
+.fl{width:170px;font-size:11px;color:var(--gray);flex-shrink:0;text-align:right}
+.fb-w{flex:1;height:24px;background:var(--navy);border-radius:3px;overflow:hidden}
+.fb{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px;transition:width .5s}
 .fv{font-size:10px;font-weight:600;color:#fff;white-space:nowrap}
-.fo{font-size:10px;color:#8D9EB5;margin-left:6px;white-space:nowrap}
+.fo{font-size:10px;color:var(--gray);margin-left:6px;white-space:nowrap}
 
-.sh{display:grid;grid-template-columns:1fr 80px 100px 72px;gap:8px;padding:8px 12px;background:#243447;border-radius:8px 8px 0 0;font-size:10px;font-weight:700;color:#8D9EB5;text-transform:uppercase;letter-spacing:.05em}
-.sr{display:grid;grid-template-columns:1fr 80px 100px 72px;gap:8px;padding:10px 12px;border-bottom:1px solid #0D1B2A;background:#1B2D3F;align-items:start;transition:background .15s}
-.sr:hover{background:#243447}
+/* ── TREND BADGES ── */
+.trend{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;margin-left:6px}
+.trend.up{background:rgba(0,184,148,.15);color:var(--green)}
+.trend.dn{background:rgba(214,48,49,.15);color:var(--red)}
+.trend.nt{background:var(--navy3);color:var(--gray)}
+
+/* ── SCORECARD ── */
+.sh{display:grid;grid-template-columns:1fr 80px 100px 72px;gap:8px;padding:8px 12px;background:var(--navy3);border-radius:8px 8px 0 0;font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em}
+.sr{display:grid;grid-template-columns:1fr 80px 100px 72px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--navy);background:var(--navy2);align-items:start;transition:background .15s}
+.sr:hover{background:var(--navy3)}
 .sr:last-child{border-bottom:none;border-radius:0 0 8px 8px}
 .sn{font-size:12px;color:#E8EDF2;font-weight:500}
-.so{font-size:10px;color:#4A5E72;margin-top:2px;line-height:1.4}
-.sv{font-size:13px;font-weight:700;text-align:center}
-.sbv{font-size:11px;color:#8D9EB5;text-align:center}
-.sb{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center;display:inline-block;letter-spacing:.03em}
-.sb.ok{background:#0A3D2B;color:#00B894}
-.sb.w{background:#3D2A1A;color:#E17055}
-.sb.d{background:#3D1A1A;color:#D63031}
+.so{font-size:10px;color:var(--gray2);margin-top:2px;line-height:1.4}
+.sv{font-size:13px;font-weight:600;text-align:center}
+.sbv{font-size:10px;color:var(--gray);text-align:center}
+.sb{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center;display:inline-block}
+.sb.ok{background:#0A3D2B;color:var(--green)}
+.sb.w{background:#3D2A1A;color:var(--amber)}
+.sb.d{background:#3D1A1A;color:var(--red)}
 
 .sc-sum{display:flex;gap:10px;margin-bottom:1.25rem}
 .ssc{flex:1;border-radius:10px;padding:12px;text-align:center}
-.ssn{font-size:24px;font-weight:700;line-height:1}
+.ssn{font-size:24px;font-weight:600;line-height:1}
 .ssl{font-size:10px;margin-top:3px}
 
-.ic{border:1px solid #243447;border-radius:12px;background:#1B2D3F;padding:12px 14px;margin-bottom:10px}
-.ic.d{border-left:3px solid #D63031;border-radius:0 12px 12px 0}
-.ic.w{border-left:3px solid #E17055;border-radius:0 12px 12px 0}
-.ic.g{border-left:3px solid #00B894;border-radius:0 12px 12px 0}
+/* ── INSIGHTS ── */
+.ic{border:1px solid var(--navy3);border-radius:12px;background:var(--navy2);padding:14px;margin-bottom:10px}
+.ic.d{border-left:3px solid var(--red);border-radius:0 12px 12px 0}
+.ic.w{border-left:3px solid var(--amber);border-radius:0 12px 12px 0}
+.ic.g{border-left:3px solid var(--green);border-radius:0 12px 12px 0}
+.ic.b{border-left:3px solid var(--blue);border-radius:0 12px 12px 0}
 .ih{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.ii{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.ii.d{background:#3D1A1A;color:#D63031}
-.ii.w{background:#3D2A1A;color:#E17055}
-.ii.g{background:#0A3D2B;color:#00B894}
-.it{font-size:13px;font-weight:700;color:#fff}
-.ib{font-size:12px;color:#8D9EB5;line-height:1.7}
+.ii{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700}
+.ii.d{background:#3D1A1A;color:var(--red)}
+.ii.w{background:#3D2A1A;color:var(--amber)}
+.ii.g{background:#0A3D2B;color:var(--green)}
+.ii.b{background:#0A2A4D;color:var(--blue)}
+.it{font-size:13px;font-weight:600;color:var(--white)}
+.ib{font-size:12px;color:var(--gray);line-height:1.7}
 
-.sum-bar{background:#1B2D3F;border-left:3px solid #D63031;border-radius:0 10px 10px 0;padding:1rem 1.25rem;margin-bottom:1.25rem}
-.sum-bar-t{font-size:11px;font-weight:700;color:#D63031;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.sum-bar-tx{font-size:13px;color:#8D9EB5;line-height:1.6}
+/* ── MARGIN BARS ── */
+.mg{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.mg-label{width:180px;font-size:12px;color:var(--gray);flex-shrink:0}
+.mg-track{flex:1;height:8px;background:var(--navy);border-radius:4px;position:relative}
+.mg-fill{height:100%;border-radius:4px;position:absolute;left:0;top:0}
+.mg-ref{position:absolute;top:-4px;width:2px;height:16px;border-radius:1px;background:rgba(255,255,255,.25)}
+.mg-val{font-size:12px;font-weight:600;width:52px;text-align:right;flex-shrink:0}
+.mg-bench{font-size:10px;color:var(--gray2);width:70px;flex-shrink:0}
 
-#ai-content{line-height:1.7;font-size:13px;color:#8D9EB5}
-#ai-content h2{font-size:16px;font-weight:700;color:#fff;margin:1.5rem 0 .75rem;padding-bottom:6px;border-bottom:1px solid #243447}
-#ai-content h3{font-size:14px;font-weight:600;color:#E8EDF2;margin:1.25rem 0 .5rem}
-#ai-content p{margin-bottom:.75rem}
-#ai-content ul,#ai-content ol{padding-left:1.5rem;margin-bottom:1rem}
-#ai-content li{margin-bottom:5px}
-#ai-content strong{color:#E8EDF2;font-weight:600}
+/* ── YEAR SELECTOR ── */
+.year-sel{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.ybtn{background:var(--navy3);border:1px solid var(--navy3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.ybtn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.ybtn:hover:not(.on){border-color:var(--blue);color:var(--blue)}
 
-.provider-tag{background:#1B3050;color:#378ADD;font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;margin-left:8px;letter-spacing:.04em}
+/* ── EVOLUTION CHART CARDS ── */
+.evo-note{font-size:11px;color:var(--gray);margin-top:8px;font-style:italic}
+
+/* ── BOTTOM SUMMARY ── */
+.bottom-sum{background:var(--navy2);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;border-left:3px solid var(--red)}
+.bs-title{font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.bs-text{font-size:13px;color:var(--gray);line-height:1.7}
+.bs-text strong{color:var(--white);font-weight:600}
+
+/* ── LEGEND ── */
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--gray)}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* ── FOOTER ── */
+.footer{background:var(--navy2);border-top:1px solid var(--navy3);padding:1rem 2rem;text-align:center;font-size:11px;color:var(--gray2)}
 </style>
 </head>
 <body>
 
-<div id="upload-screen">
-  <div class="up-logo">Varejo de Supermercados · Dashboard Executivo</div>
-  <div class="up-title">Análise Financeira com IA</div>
-  <div class="up-sub">Envie os arquivos do período e o dashboard é gerado automaticamente</div>
-
-  <div class="up-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
-    <span class="up-box-icon">📂</span>
-    <div class="up-box-title">Clique ou arraste os arquivos aqui</div>
-    <div class="up-box-sub">Balanço Patrimonial + DRE · PDF</div>
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">Villa Simpatia</div>
+    <div class="header-period">Análise 2020–2025</div>
+    <div class="header-alert">⚠ MARGEM CRÍTICA 2025</div>
   </div>
-  <input type="file" id="file-input" multiple accept=".pdf,.png,.jpg,.jpeg" onchange="handleFiles(this.files)">
-
-  <div class="file-list" id="file-list"></div>
-
-  <div class="api-row">
-    <div class="api-label">
-      Chave de API
-      <span class="api-badge">GOOGLE GEMINI — GRÁTIS</span>
-    </div>
-    <div class="api-wrap">
-      <input type="password" class="api-input" id="api-key" placeholder="AIza...">
-      <button class="api-save" onclick="saveKey()">Salvar</button>
-    </div>
-    <div class="api-hint">
-      Obtenha grátis em <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> · Salva no seu navegador
-    </div>
-  </div>
-
-  <button class="btn-go" id="btn-go" onclick="startAnalysis()" disabled>
-    Gerar Dashboard Executivo
-  </button>
+  <div style="font-size:11px;color:var(--gray)">Dashboard Executivo · Varejo Supermercados</div>
 </div>
 
-<div id="loading-screen">
-  <div class="spin"></div>
-  <div class="load-title">Analisando documentos...</div>
-  <div class="load-step" id="load-step">Enviando arquivos para o Gemini</div>
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-card">
+      <div class="hc-label">Receita bruta 2025</div>
+      <div class="hc-val">R$ 624M</div>
+      <div class="hc-sub">+127% vs. 2020</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Lucro líquido 2025</div>
+      <div class="hc-val r">R$ 2,9M</div>
+      <div class="hc-sub">Mínimo histórico</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Margem líquida 2025</div>
+      <div class="hc-val r">0,52%</div>
+      <div class="hc-sub">Era 2,91% em 2020</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Patrimônio líquido</div>
+      <div class="hc-val g">R$ 66,2M</div>
+      <div class="hc-sub">+206% vs. 2020</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Estoques 2025</div>
+      <div class="hc-val a">R$ 51,0M</div>
+      <div class="hc-sub">42 dias de giro</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Desp. op. vs. res. bruto</div>
+      <div class="hc-val r">104%</div>
+      <div class="hc-sub">Operação deficitária</div>
+    </div>
+  </div>
+  <div class="hero-headline">
+    <strong>O paradoxo 2025:</strong> a empresa triplicou o faturamento em 5 anos (R$ 274M → R$ 624M), mas a margem líquida caiu de 2,91% para 0,52% — o menor nível histórico. O crescimento não veio acompanhado de eficiência operacional. <strong>As despesas operacionais superaram o resultado bruto pela primeira vez na história.</strong>
+  </div>
 </div>
 
-<div id="dash-screen">
-  <div class="dash-header">
-    <div class="dh-left">
-      <div class="dh-badge" id="dh-badge">⚠ ANÁLISE</div>
-      <div>
-        <div class="dh-title" id="dh-title">Dashboard Executivo</div>
-        <div class="dh-sub" id="dh-sub">Carregando...</div>
-      </div>
-    </div>
-    <button class="btn-new" onclick="resetApp()">↑ Nova Análise</button>
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab on" onclick="sw('visao',this)">Visão Geral</button>
+    <button class="tab" onclick="sw('evolucao',this)">Evolução Histórica</button>
+    <button class="tab" onclick="sw('dre',this)">DRE & Margens</button>
+    <button class="tab" onclick="sw('balanco',this)">Balanço</button>
+    <button class="tab" onclick="sw('ciclo',this)">Ciclo Financeiro</button>
+    <button class="tab" onclick="sw('scorecard',this)">Scorecard</button>
+    <button class="tab" onclick="sw('diagnostico',this)">Diagnóstico</button>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- ═══ VISÃO GERAL ═══ -->
+<div class="panel on" id="p-visao">
+  <div class="sec">Resultado 2025 em destaque</div>
+  <div class="kg">
+    <div class="kc"><div class="kl">Receita bruta</div><div class="kv">R$ 624,1M</div><div class="ks">Faturamento total</div></div>
+    <div class="kc"><div class="kl">CMV</div><div class="kv a">R$ 444,2M</div><div class="ks">79,3% da rec.líq.</div></div>
+    <div class="kc"><div class="kl">Resultado bruto</div><div class="kv a">R$ 115,9M</div><div class="ks">Margem 20,7%</div></div>
+    <div class="kc"><div class="kl">Desp. operacionais</div><div class="kv r">R$ 120,5M</div><div class="ks">Maior que res.bruto!</div></div>
+    <div class="kc"><div class="kl">Rec. financeira</div><div class="kv a">R$ 11,8M</div><div class="ks">Salva o resultado</div></div>
+    <div class="kc"><div class="kl">Lucro líquido</div><div class="kv r">R$ 2,9M</div><div class="ks">Margem 0,52%</div></div>
   </div>
 
-  <div class="dash-body">
-
-    <div class="sum-bar">
-      <div class="sum-bar-t" id="sum-title">Diagnóstico</div>
-      <div class="sum-bar-tx" id="sum-text">Carregando...</div>
+  <div class="card">
+    <div class="card-title">Cascata DRE 2025 — do faturamento ao lucro</div>
+    <div class="card-sub">Onde os R$ 624M são consumidos até restar R$ 2,9M</div>
+    <div class="fun">
+      <div class="fr"><div class="fl">Receita bruta</div><div class="fb-w"><div class="fb" style="width:100%;background:#0984E3"><span class="fv">R$ 624,1M</span></div></div></div>
+      <div class="fr"><div class="fl">(-) Deduções</div><div class="fb-w"><div class="fb" style="width:11%;background:#8D9EB5;min-width:56px"><span class="fv">R$ 64,3M</span></div></div></div>
+      <div class="fr"><div class="fl">= Receita líquida</div><div class="fb-w"><div class="fb" style="width:90%;background:#378ADD"><span class="fv">R$ 559,8M</span></div></div></div>
+      <div class="fr"><div class="fl">(-) CMV</div><div class="fb-w"><div class="fb" style="width:71%;background:#E17055"><span class="fv">R$ 444,2M</span></div></div><span class="fo">79,3% da rec.líq.</span></div>
+      <div class="fr"><div class="fl">= Resultado bruto</div><div class="fb-w"><div class="fb" style="width:21%;background:#00B894;min-width:72px"><span class="fv">R$ 115,9M</span></div></div><span class="fo">Margem 20,7%</span></div>
+      <div class="fr"><div class="fl">(-) Desp. operacionais</div><div class="fb-w"><div class="fb" style="width:22%;background:#D63031;min-width:74px"><span class="fv">R$ 120,5M</span></div></div><span class="fo" style="color:#ff7675;font-weight:600">⚠ Maior que res.bruto</span></div>
+      <div class="fr"><div class="fl">+ Resultado financeiro</div><div class="fb-w"><div class="fb" style="width:5%;background:#185FA5;min-width:42px"><span class="fv" style="font-size:9px">R$ 11,8M</span></div></div><span class="fo" style="color:#74b9ff;font-weight:600">Salva o resultado</span></div>
+      <div class="fr"><div class="fl">= Lucro líquido</div><div class="fb-w"><div class="fb" style="width:0.6%;background:#27500A;min-width:56px"><span class="fv">R$ 2,9M</span></div></div><span class="fo">Margem 0,52%</span></div>
     </div>
-
-    <div class="d-tabs">
-      <button class="d-tab on" onclick="sw('visao',event)">Visão geral</button>
-      <button class="d-tab" onclick="sw('dre',event)">DRE & margens</button>
-      <button class="d-tab" onclick="sw('balanco',event)">Balanço</button>
-      <button class="d-tab" onclick="sw('scorecard',event)">Scorecard</button>
-      <button class="d-tab" onclick="sw('diagnostico',event)">Diagnóstico IA</button>
-    </div>
-
-    <div class="d-panel on" id="p-visao">
-      <div class="kgrid" id="kpi-main"></div>
-      <div class="ccard" id="funnel-card">
-        <div class="ctitle">Cascata DRE — do faturamento ao lucro</div>
-        <div class="csub">Onde o dinheiro é consumido ao longo do resultado</div>
-        <div class="fun" id="funnel-body"></div>
-      </div>
-      <div class="g2">
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Margens vs. benchmark setorial</div>
-          <div class="csub">Empresa comparada às referências do setor</div>
-          <div style="position:relative;height:220px"><canvas id="c-margens" role="img" aria-label="Margens comparativas">Comparação de margens.</canvas></div>
-        </div>
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Liquidez corrente vs. seca</div>
-          <div class="csub">O gap revela dependência do estoque</div>
-          <div style="position:relative;height:220px"><canvas id="c-liq" role="img" aria-label="Índices de liquidez">Liquidez corrente e seca.</canvas></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-panel" id="p-dre">
-      <div class="kgrid" id="kpi-dre"></div>
-      <div class="g2">
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Composição do resultado</div>
-          <div class="csub">Resultado bruto, despesas e financeiro</div>
-          <div style="position:relative;height:240px"><canvas id="c-result" role="img" aria-label="Composição resultado">Resultado operacional.</canvas></div>
-        </div>
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Gap vs. mínimo setorial (p.p.)</div>
-          <div class="csub">Quanto falta para atingir o benchmark</div>
-          <div style="position:relative;height:240px"><canvas id="c-gap" role="img" aria-label="Gap de margens">Gap de margens.</canvas></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-panel" id="p-balanco">
-      <div class="kgrid" id="kpi-balanco"></div>
-      <div class="g2">
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Ativo circulante</div>
-          <div class="csub">Composição dos ativos de curto prazo</div>
-          <div class="leg" id="leg-ativo"></div>
-          <div style="position:relative;height:200px"><canvas id="c-ativo" role="img" aria-label="Ativo circulante">Ativo circulante.</canvas></div>
-        </div>
-        <div class="ccard" style="margin-bottom:0">
-          <div class="ctitle">Passivo circulante</div>
-          <div class="csub">Composição das obrigações de curto prazo</div>
-          <div class="leg" id="leg-passivo"></div>
-          <div style="position:relative;height:200px"><canvas id="c-passivo" role="img" aria-label="Passivo circulante">Passivo circulante.</canvas></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-panel" id="p-scorecard">
-      <div class="sc-sum">
-        <div class="ssc" style="background:#0A3D2B"><div class="ssn" style="color:#00B894" id="sc-ok">—</div><div class="ssl" style="color:#00B894">Benchmark</div></div>
-        <div class="ssc" style="background:#3D2A1A"><div class="ssn" style="color:#E17055" id="sc-warn">—</div><div class="ssl" style="color:#E17055">Atenção</div></div>
-        <div class="ssc" style="background:#3D1A1A"><div class="ssn" style="color:#D63031" id="sc-danger">—</div><div class="ssl" style="color:#D63031">Crítico</div></div>
-      </div>
-      <div class="sh"><span>Indicador</span><span style="text-align:center">Empresa</span><span style="text-align:center">Benchmark</span><span style="text-align:center">Status</span></div>
-      <div id="sc-rows"></div>
-    </div>
-
-    <div class="d-panel" id="p-diagnostico">
-      <div id="insight-cards"></div>
-      <div class="ccard">
-        <div class="ctitle">Análise estratégica completa <span class="provider-tag">GEMINI AI</span></div>
-        <div class="csub">Diagnóstico gerado automaticamente com base nos documentos</div>
-        <div id="ai-content"></div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Margens vs. benchmark setorial</div>
+      <div class="card-sub">Empresa vs. referências supermercadistas brasileiros</div>
+      <div class="mg">
+        <div class="mg-label">Margem bruta</div>
+        <div class="mg-track"><div class="mg-fill" style="width:47%;background:#E17055"></div><div class="mg-ref" style="left:50%"></div></div>
+        <div class="mg-val" style="color:#E17055">20,7%</div><div class="mg-bench">ref:22–26%</div>
+      </div>
+      <div class="mg">
+        <div class="mg-label">Margem operacional (EBIT)</div>
+        <div class="mg-track"><div class="mg-fill" style="width:10%;background:#D63031"></div><div class="mg-ref" style="left:30%"></div></div>
+        <div class="mg-val" style="color:#D63031">1,02%</div><div class="mg-bench">ref:3–6%</div>
+      </div>
+      <div class="mg">
+        <div class="mg-label">Margem líquida</div>
+        <div class="mg-track"><div class="mg-fill" style="width:8%;background:#D63031"></div><div class="mg-ref" style="left:33%"></div></div>
+        <div class="mg-val" style="color:#D63031">0,52%</div><div class="mg-bench">ref:1–3%</div>
+      </div>
+      <div class="mg">
+        <div class="mg-label">ROE (retorno s/ PL)</div>
+        <div class="mg-track"><div class="mg-fill" style="width:22%;background:#E17055"></div><div class="mg-ref" style="left:50%"></div></div>
+        <div class="mg-val" style="color:#E17055">4,4%</div><div class="mg-bench">ref:10–20%</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Liquidez corrente vs. seca</div>
+      <div class="card-sub">O gap de 0,86 pontos = R$ 47,7M presos em estoque</div>
+      <div style="position:relative;height:220px"><canvas id="c-liq" role="img" aria-label="Liquidez">LC 1,67 vs LS 0,81.</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVOLUÇÃO HISTÓRICA ═══ -->
+<div class="panel" id="p-evolucao">
+
+  <div class="bottom-sum">
+    <div class="bs-title">A história em uma frase</div>
+    <div class="bs-text">Entre 2020 e 2025, a receita cresceu <strong>+127%</strong> (de R$ 274M para R$ 624M). O lucro, no entanto, caiu de <strong>R$ 7,2M para R$ 2,9M</strong> — uma queda de 60%. A empresa cresceu, mas não ficou mais eficiente. <strong>2025 é o ponto de inflexão: pela primeira vez as despesas operacionais superam o resultado bruto.</strong></div>
+  </div>
+
+  <div class="sec">Crescimento da receita (2020–2025)</div>
+  <div class="card">
+    <div class="card-title">Receita bruta e receita líquida — evolução anual</div>
+    <div class="card-sub">Crescimento consistente do faturamento, mas com pressão crescente nas margens</div>
+    <div class="leg">
+      <span class="li"><span class="ld" style="background:#0984E3"></span>Receita bruta</span>
+      <span class="li"><span class="ld" style="background:#378ADD"></span>Receita líquida</span>
+      <span class="li"><span class="ld" style="background:#00B894"></span>Resultado bruto</span>
+    </div>
+    <div style="position:relative;height:280px"><canvas id="c-receita" role="img" aria-label="Evolução receita 2020-2025">Receita crescendo de 274M em 2020 para 624M em 2025.</canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Lucro líquido — evolução (R$ M)</div>
+      <div class="card-sub">Queda acentuada em 2025 apesar do crescimento da receita</div>
+      <div style="position:relative;height:220px"><canvas id="c-lucro" role="img" aria-label="Evolução lucro">Lucro: 7.25, 7.19, 8.02, 8.54, x, 2.92.</canvas></div>
+      <div class="evo-note">⚠ 2025: queda de 65,8% vs. pico de 2023 (R$ 8,54M)</div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Margens ao longo dos anos (%)</div>
+      <div class="card-sub">Tendência de queda contínua da margem líquida</div>
+      <div style="position:relative;height:220px"><canvas id="c-margens-evo" role="img" aria-label="Evolução margens">Margem líquida caindo de 2,91% para 0,52%.</canvas></div>
+      <div class="evo-note">⚠ Margem bruta perdeu 2,1pp em 5 anos</div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:1.5rem">Balanço patrimonial — evolução (2020–2025)</div>
+  <div class="card">
+    <div class="card-title">Crescimento do ativo total e patrimônio líquido</div>
+    <div class="card-sub">Expansão patrimonial sólida — ativo cresceu +152%, PL cresceu +206%</div>
+    <div class="leg">
+      <span class="li"><span class="ld" style="background:#0984E3"></span>Ativo total</span>
+      <span class="li"><span class="ld" style="background:#00B894"></span>Patrimônio líquido</span>
+      <span class="li"><span class="ld" style="background:#E17055"></span>Estoques</span>
+      <span class="li"><span class="ld" style="background:#D63031"></span>Fornecedores</span>
+    </div>
+    <div style="position:relative;height:280px"><canvas id="c-balanco-evo" role="img" aria-label="Evolução balanço">Ativo crescendo de 50M para 128M.</canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Despesas operacionais vs. resultado bruto</div>
+      <div class="card-sub">O cruzamento fatal: em 2025 despesas superam resultado bruto</div>
+      <div style="position:relative;height:220px"><canvas id="c-desp-evo" role="img" aria-label="Despesas vs resultado bruto">Despesas cruzam resultado bruto em 2025.</canvas></div>
+      <div class="evo-note">⚠ Primeira vez na história que despesas > resultado bruto</div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Receita financeira vs. lucro líquido</div>
+      <div class="card-sub">A dependência da tesouraria ficou crítica em 2025</div>
+      <div style="position:relative;height:220px"><canvas id="c-fin-evo" role="img" aria-label="Receita financeira vs lucro">Receita financeira se aproxima e supera lucro líquido.</canvas></div>
+      <div class="evo-note">Em 2025: rec. financeira (R$11,8M) = 405% do lucro (R$2,9M)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DRE & MARGENS ═══ -->
+<div class="panel" id="p-dre">
+  <div class="sec">Comparativo DRE — todos os anos</div>
+
+  <div class="card">
+    <div class="card-title">DRE comparativa 2020–2025 (R$ milhões)</div>
+    <div class="card-sub">Principais linhas do resultado ao longo dos anos</div>
+    <div style="position:relative;height:320px"><canvas id="c-dre-comp" role="img" aria-label="DRE comparativa">Comparativo DRE 2020-2025.</canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Crescimento receita x custo x despesa (%)</div>
+      <div class="card-sub">Índice base 100 = 2020 — quem cresceu mais?</div>
+      <div style="position:relative;height:240px"><canvas id="c-index" role="img" aria-label="Índice crescimento">Índice base 100 crescimento comparado.</canvas></div>
+      <div class="evo-note">Despesas cresceram mais rápido que a receita</div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Composição do resultado 2025</div>
+      <div class="card-sub">Como o lucro é gerado na prática</div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px;background:#3D1A1A;border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:10px;color:#ff7675;font-weight:700;margin-bottom:4px;text-transform:uppercase">Déficit operacional</div>
+          <div style="font-size:20px;font-weight:600;color:var(--red)">-R$ 4,6M</div>
+          <div style="font-size:10px;color:#ff7675;margin-top:3px">Desp.op. > Res.bruto</div>
+        </div>
+        <div style="display:flex;align-items:center;color:var(--gray);font-size:20px;padding:0 4px">+</div>
+        <div style="flex:1;min-width:120px;background:#0A3D2B;border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:10px;color:#55efc4;font-weight:700;margin-bottom:4px;text-transform:uppercase">Rec. financeira</div>
+          <div style="font-size:20px;font-weight:600;color:var(--green)">+R$ 11,8M</div>
+          <div style="font-size:10px;color:#55efc4;margin-top:3px">Tesouraria</div>
+        </div>
+        <div style="display:flex;align-items:center;color:var(--gray);font-size:20px;padding:0 4px">=</div>
+        <div style="flex:1;min-width:120px;background:#3D2A1A;border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:10px;color:#fdcb6e;font-weight:700;margin-bottom:4px;text-transform:uppercase">Lucro líquido</div>
+          <div style="font-size:20px;font-weight:600;color:var(--amber)">R$ 2,9M</div>
+          <div style="font-size:10px;color:#fdcb6e;margin-top:3px">Margem 0,52%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BALANÇO ═══ -->
+<div class="panel" id="p-balanco">
+  <div class="sec">Situação patrimonial 2025</div>
+  <div class="kg">
+    <div class="kc"><div class="kl">Ativo total</div><div class="kv">R$ 128,3M</div></div>
+    <div class="kc"><div class="kl">Ativo circulante</div><div class="kv">R$ 98,7M</div><div class="ks">76,9% do ativo</div></div>
+    <div class="kc"><div class="kl">Estoques</div><div class="kv r">R$ 51,0M</div><div class="ks">51,7% do AC</div></div>
+    <div class="kc"><div class="kl">Fornecedores</div><div class="kv a">R$ 46,8M</div><div class="ks">79% do PC</div></div>
+    <div class="kc"><div class="kl">Liquidez corrente</div><div class="kv a">1,67</div><div class="ks">Ref: 1,5–2,0</div></div>
+    <div class="kc"><div class="kl">Liquidez seca</div><div class="kv r">0,81</div><div class="ks">Abaixo de 1,0</div></div>
+    <div class="kc"><div class="kl">Patrimônio líquido</div><div class="kv g">R$ 66,2M</div><div class="ks">51,6% do ativo</div></div>
+    <div class="kc"><div class="kl">Endividamento</div><div class="kv g">48,4%</div><div class="ks">Saudável</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Ativo circulante — R$ 98,7M</div>
+      <div class="card-sub">Distribuição dos ativos de curto prazo</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#D63031"></span>Estoques 51,7%</span>
+        <span class="li"><span class="ld" style="background:#0984E3"></span>Cartões 26,6%</span>
+        <span class="li"><span class="ld" style="background:#00B894"></span>Aplicações 8,1%</span>
+        <span class="li"><span class="ld" style="background:#8D9EB5"></span>Outros 13,6%</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="c-ativo" role="img" aria-label="Ativo circulante">Estoques 51,7%.</canvas></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Passivo circulante — R$ 59,2M</div>
+      <div class="card-sub">Distribuição das obrigações de curto prazo</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#E17055"></span>Fornecedores 79%</span>
+        <span class="li"><span class="ld" style="background:#0984E3"></span>Provisões 9%</span>
+        <span class="li"><span class="ld" style="background:#00B894"></span>Fiscal 6%</span>
+        <span class="li"><span class="ld" style="background:#8D9EB5"></span>Outros 6%</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="c-passivo" role="img" aria-label="Passivo circulante">Fornecedores 79%.</canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Estrutura patrimonial completa</div>
+    <div class="card-sub">Composição visual do ativo total de R$ 128,3M</div>
+    <div style="margin-top:8px">
+      <div style="font-size:10px;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Ativo</div>
+      <div style="display:flex;height:32px;border-radius:8px;overflow:hidden;margin-bottom:8px">
+        <div style="width:39.7%;background:#D63031;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">Estoques 39,7%</div>
+        <div style="width:20.4%;background:#0984E3;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">Cartões 20,4%</div>
+        <div style="width:16.7%;background:#378ADD;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">Outros AC</div>
+        <div style="width:23.1%;background:#4A5E72;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">ANC 23,1%</div>
+      </div>
+      <div style="font-size:10px;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Passivo + PL</div>
+      <div style="display:flex;height:32px;border-radius:8px;overflow:hidden">
+        <div style="width:36.5%;background:#E17055;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">Fornecedores 36,5%</div>
+        <div style="width:9.7%;background:#BA7517;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">PC outros</div>
+        <div style="width:2.2%;background:#8D9EB5"></div>
+        <div style="width:51.6%;background:#00B894;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">Patrimônio Líquido 51,6%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CICLO FINANCEIRO ═══ -->
+<div class="panel" id="p-ciclo">
+  <div class="kg">
+    <div class="kc"><div class="kl">Prazo médio estoque</div><div class="kv r">42 dias</div><div class="ks">Ideal: &lt; 30 dias</div></div>
+    <div class="kc"><div class="kl">Capital parado</div><div class="kv a">R$ 51,0M</div><div class="ks">Em mercadorias</div></div>
+    <div class="kc"><div class="kl">Cartões a receber</div><div class="kv">R$ 26,2M</div><div class="ks">+30 dias</div></div>
+    <div class="kc"><div class="kl">Caixa + aplicações</div><div class="kv">R$ 18,8M</div><div class="ks">Imediato</div></div>
+    <div class="kc"><div class="kl">Fornecedores</div><div class="kv a">R$ 46,8M</div><div class="ks">A pagar</div></div>
+    <div class="kc"><div class="kl">Gap rec. vs. fornec.</div><div class="kv r">-R$ 1,6M</div><div class="ks">Negativo</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Dinâmica do fluxo financeiro operacional</div>
+    <div class="card-sub">Como o dinheiro circula — e onde está o gargalo</div>
+    <div style="display:flex;gap:0;margin:12px 0;flex-wrap:wrap">
+      <div style="flex:1;min-width:90px;border:1px solid var(--navy3);padding:12px 8px;text-align:center;background:var(--navy3);border-radius:10px 0 0 10px">
+        <div style="font-size:20px;margin-bottom:6px">🚛</div>
+        <div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:3px">Fornecedor</div>
+        <div style="font-size:10px;color:var(--gray)">Concede prazo comercial</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--gray);padding:0 6px;font-size:16px">→</div>
+      <div style="flex:1;min-width:90px;border:1px solid var(--navy3);padding:12px 8px;text-align:center;background:var(--navy3)">
+        <div style="font-size:20px;margin-bottom:6px">📦</div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:3px">Estoque</div>
+        <div style="font-size:10px;color:var(--gray)">Parado ~42 dias</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--gray);padding:0 6px;font-size:16px">→</div>
+      <div style="flex:1;min-width:90px;border:1px solid var(--navy3);padding:12px 8px;text-align:center;background:var(--navy3)">
+        <div style="font-size:20px;margin-bottom:6px">🛒</div>
+        <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:3px">Venda</div>
+        <div style="font-size:10px;color:var(--gray)">Cartão / dinheiro</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--gray);padding:0 6px;font-size:16px">→</div>
+      <div style="flex:1;min-width:90px;border:1px solid var(--navy3);padding:12px 8px;text-align:center;background:var(--navy3)">
+        <div style="font-size:20px;margin-bottom:6px">💳</div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:3px">Recebimento</div>
+        <div style="font-size:10px;color:var(--gray)">+30 dias (cartão)</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--gray);padding:0 6px;font-size:16px">→</div>
+      <div style="flex:1;min-width:90px;border:1px solid var(--navy3);padding:12px 8px;text-align:center;background:var(--navy3);border-radius:0 10px 10px 0">
+        <div style="font-size:20px;margin-bottom:6px">💵</div>
+        <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:3px">Caixa</div>
+        <div style="font-size:10px;color:var(--gray)">Para pagar</div>
+      </div>
+    </div>
+    <div style="background:rgba(225,112,85,.1);border:1px solid rgba(225,112,85,.3);border-radius:8px;padding:10px 14px;margin-top:8px">
+      <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:3px">⚠ Zona de tensão de caixa</div>
+      <div style="font-size:11px;color:#fdcb6e;line-height:1.5">Fornecedores (R$ 46,8M) precisam ser pagos antes dos cartões serem recebidos. Recebíveis + caixa (R$ 45,2M) &lt; Fornecedores (R$ 46,8M) = saldo negativo de R$ 1,6M antes das vendas do dia.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Giro de estoque vs. benchmark</div>
+      <div class="card-sub">Dias para renovar completamente o estoque</div>
+      <div style="position:relative;height:200px"><canvas id="c-giro" role="img" aria-label="Giro de estoque">Empresa 42 dias, ideal 25 dias.</canvas></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Recebíveis vs. obrigações imediatas</div>
+      <div class="card-sub">O quanto há para receber vs. o quanto há para pagar</div>
+      <div style="position:relative;height:200px"><canvas id="c-recv" role="img" aria-label="Recebíveis vs fornecedores">Recebíveis 45,2M vs fornecedores 46,8M.</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCORECARD ═══ -->
+<div class="panel" id="p-scorecard">
+  <div class="sc-sum">
+    <div class="ssc" style="background:#0A3D2B"><div class="ssn" style="color:var(--green)">5</div><div class="ssl" style="color:var(--green)">Dentro do benchmark</div></div>
+    <div class="ssc" style="background:#3D2A1A"><div class="ssn" style="color:var(--amber)">5</div><div class="ssl" style="color:var(--amber)">Zona de atenção</div></div>
+    <div class="ssc" style="background:#3D1A1A"><div class="ssn" style="color:var(--red)">3</div><div class="ssl" style="color:var(--red)">Zona crítica</div></div>
+  </div>
+  <div class="sh"><span>Indicador</span><span style="text-align:center">2025</span><span style="text-align:center">Benchmark</span><span style="text-align:center">Status</span></div>
+  <div id="sc-rows"></div>
+</div>
+
+<!-- ═══ DIAGNÓSTICO ═══ -->
+<div class="panel" id="p-diagnostico">
+
+  <div class="bottom-sum" style="margin-bottom:1.5rem">
+    <div class="bs-title">Diagnóstico executivo consolidado</div>
+    <div class="bs-text">
+      A empresa vive um <strong>paradoxo histórico:</strong> nunca faturou tanto (R$ 624M) e nunca lucrou tão pouco (R$ 2,9M, margem 0,52%). O crescimento de receita de +127% em 5 anos não foi acompanhado de eficiência operacional — as despesas cresceram mais rápido que a receita. <strong>Em 2025, pela primeira vez na história, o varejo puro deu prejuízo.</strong> O lucro existe apenas pela receita financeira da tesouraria.
+    </div>
+  </div>
+
+  <div class="sec">Pontos críticos (ação imediata)</div>
+
+  <div class="ic d">
+    <div class="ih"><div class="ii d">!</div><div class="it">Operação varejista deficitária pela 1ª vez na história</div></div>
+    <div class="ib">Em 2020, a operação gerava R$ 11,4M de resultado antes do financeiro. Em 2025, gera -R$ 4,6M. A diferença de R$ 16M em 5 anos mostra que as despesas operacionais cresceram desproporcionalmente (+165%) vs. receita (+127%). Cada real de resultado bruto gerado é mais do que consumido pelas despesas.</div>
+  </div>
+
+  <div class="ic d">
+    <div class="ih"><div class="ii d">!</div><div class="it">Margem líquida em colapso: de 2,91% para 0,52% em 5 anos</div></div>
+    <div class="ib">A trajetória é consistente: 2020 (2,91%) → 2021 (2,66%) → 2022 (2,35%) → 2023 (1,69%) → 2025 (0,52%). Não é um acidente — é uma tendência estrutural. Qualquer oscilação de 1% elimina o lucro. O negócio está a uma crise de distância do prejuízo.</div>
+  </div>
+
+  <div class="ic d">
+    <div class="ih"><div class="ii d">!</div><div class="it">405% de dependência da tesouraria — risco sistêmico</div></div>
+    <div class="ib">A receita financeira (R$ 11,8M) representa 405% do lucro líquido (R$ 2,9M). Em 2020 essa dependência era de 64%. A empresa deixou de ser um varejista e passou a ser um gestor de caixa. Qualquer pressão nas taxas de antecipação de cartão ou nas aplicações financeiras elimina o lucro integralmente.</div>
+  </div>
+
+  <div class="sec" style="margin-top:1.5rem">Pontos de atenção (monitorar)</div>
+
+  <div class="ic w">
+    <div class="ih"><div class="ii w">~</div><div class="it">R$ 51M em estoque — giro de 42 dias acima do ideal</div></div>
+    <div class="ib">O prazo médio de estoque cresceu junto com a empresa (era ~34 dias em 2020) e hoje está em 42 dias, acima do ideal setorial (30 dias). Com fornecedores em R$ 46,8M e recebíveis + caixa em R$ 45,2M, o saldo é negativo antes das vendas do dia. A empresa opera no limite do capital de giro.</div>
+  </div>
+
+  <div class="ic w">
+    <div class="ih"><div class="ii w">~</div><div class="it">Margem bruta perdendo espaço continuamente</div></div>
+    <div class="ib">A margem bruta caiu de 22,8% em 2020 para 20,7% em 2025 — uma perda de 2,1 pontos percentuais. Isso indica pressão crescente no CMV: ou o poder de negociação com fornecedores está diminuindo, ou a precificação não acompanha os custos. Para um setor onde cada décimo de ponto conta, isso é crítico.</div>
+  </div>
+
+  <div class="sec" style="margin-top:1.5rem">Fortalezas (manter e preservar)</div>
+
+  <div class="ic g">
+    <div class="ih"><div class="ii g">✓</div><div class="it">Crescimento de receita consistente e expressivo</div></div>
+    <div class="ib">+127% de receita em 5 anos (CAGR de ~18% ao ano) demonstra capacidade comercial e de expansão real. A empresa sabe crescer. O desafio é fazer esse crescimento ser rentável — o problema não é a receita, é o controle das despesas.</div>
+  </div>
+
+  <div class="ic g">
+    <div class="ih"><div class="ii g">✓</div><div class="it">Patrimônio líquido sólido e sem endividamento bancário</div></div>
+    <div class="ib">PL de R$ 66,2M (51,6% do ativo), crescimento de +206% em 5 anos, ausência de endividamento bancário expressivo e lucros acumulados de R$ 31,2M oferecem fôlego real para intervenções operacionais. A empresa tem capital para se corrigir — mas a janela está se fechando.</div>
+  </div>
+
+  <div class="ic b">
+    <div class="ih"><div class="ii b">→</div><div class="it">Cruzamento Balanço + DRE: o que os números revelam juntos</div></div>
+    <div class="ib">O crescimento do ativo (de R$ 50M para R$ 128M) foi financiado principalmente por lucros acumulados e fornecedores — não por dívida bancária. Isso é eficiência de capital. Porém, o crescimento das despesas operacionais (+165%) contra o crescimento do resultado bruto (+104%) mostra que a expansão física não foi acompanhada de ganhos de escala. A empresa cresceu o tamanho mas não a eficiência.</div>
+  </div>
+
+</div>
+
+</div><!-- end .body -->
+
+<div class="footer">
+  Villa Simpatia · Comercial Villa Simpatia Ltda · Dashboard Executivo v1.0 · Dados: TOTVS Varejo Supermercados · 2020–2025
 </div>
 
 <script>
-let files = [];
-let dashData = null;
-let charts = {};
+const anos = ['2020','2021','2022','2023','2025'];
+const RB   = [274.59, 303.16, 359.00, 559.92, 624.12];
+const RL   = [248.97, 270.83, 322.61, 504.93, 559.80];
+const CMV  = [192.16, 211.14, 254.72, 398.87, 444.16];
+const RBR  = [56.81,  59.69,  67.89, 106.06, 115.90];
+const DOP  = [45.41,  49.09,  58.73,  99.96, 120.48];
+const RFIN = [4.70,   3.40,   4.83,  10.28,  11.82];
+const LUC  = [7.25,   7.19,   8.02,   8.54,   2.92];
+const MB   = [22.8,   22.0,   21.1,   21.0,   20.7];
+const ML   = [2.91,   2.66,   2.35,   1.69,   0.52];
+const EBIT = [4.58,   4.20,   3.86,   2.73,   1.02];
 
-function saveKey(){
-  const k = document.getElementById('api-key').value.trim();
-  if(k){ localStorage.setItem('gemini_key', k); alert('Chave salva!'); }
-}
+const AT   = [50.83, 67.75, 75.56, 116.13, 128.35];
+const PL   = [21.65, 27.94, 34.35,  55.00,  66.22];
+const EST  = [17.87, 26.58, 30.94,  46.93,  50.99];
+const FORN = [15.98, 24.19, 27.17,  40.00,  46.84];
 
-window.addEventListener('load', () => {
-  const k = localStorage.getItem('gemini_key');
-  if(k) document.getElementById('api-key').value = k;
-  checkReady();
-});
+const C = {blue:'#0984E3',blue2:'#378ADD',green:'#00B894',amber:'#E17055',red:'#D63031',gray:'#8D9EB5',navy:'#1B2D3F',white:'#E8EDF2'};
+const gridColor = 'rgba(255,255,255,0.05)';
+const tickColor = '#8D9EB5';
+const baseOpts = {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tickColor,font:{size:10}}},y:{grid:{color:gridColor},ticks:{color:tickColor}}}};
+function merge(a,b){return JSON.parse(JSON.stringify(Object.assign({},a,b)))}
 
-const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
-dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
+let ch = {};
+function kc(id){if(ch[id]){ch[id].destroy();delete ch[id];}}
+function ge(id){return document.getElementById(id)}
 
-function handleFiles(f){ for(const x of f) files.push(x); renderFiles(); checkReady(); }
-
-function renderFiles(){
-  document.getElementById('file-list').innerHTML = files.map(f => `
-    <div class="file-item">
-      <span class="fi-icon">📄</span>
-      <span class="fi-name">${f.name}</span>
-      <span class="fi-size">${(f.size/1024).toFixed(0)} KB</span>
-      <span class="fi-ok">✓</span>
-    </div>`).join('');
-}
-
-function checkReady(){
-  const hasFiles = files.length > 0;
-  const hasKey = document.getElementById('api-key').value.trim().length > 10;
-  document.getElementById('btn-go').disabled = !(hasFiles && hasKey);
-}
-document.getElementById('api-key').addEventListener('input', checkReady);
-
-function fileToBase64(file){
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-async function startAnalysis(){
-  const apiKey = document.getElementById('api-key').value.trim();
-  localStorage.setItem('gemini_key', apiKey);
-  showScreen('loading');
-
-  const steps = ['Enviando arquivos para o Gemini...','Lendo Balanço e DRE...','Calculando indicadores...','Comparando com benchmarks...','Montando dashboard...'];
-  let si = 0;
-  const se = document.getElementById('load-step');
-  const iv = setInterval(() => { if(si < steps.length-1){ si++; se.textContent = steps[si]; } }, 3000);
-
-  try {
-    const parts = [];
-    for(const file of files){
-      const b64 = await fileToBase64(file);
-      parts.push({ inlineData: { mimeType: file.type || 'application/pdf', data: b64 } });
-    }
-
-    const prompt = `Você é um consultor estratégico financeiro especialista em varejo de supermercados brasileiro.
-
-Analise TODOS os documentos financeiros enviados (Balanço Patrimonial e DRE) e retorne SOMENTE um objeto JSON válido, sem markdown, sem texto adicional, com EXATAMENTE esta estrutura:
-
-{
-  "periodo": "string com o período identificado",
-  "empresa": "string com nome ou descrição da empresa",
-  "alerta_badge": "string curta de alerta (ex: MARGEM CRÍTICA 0,52%)",
-  "summary_title": "string título do diagnóstico principal",
-  "summary_text": "string com 1-2 frases do diagnóstico executivo mais importante",
-  "kpis_principais": [{"label":"string","valor":"string","sub":"string","cor":"green|amber|red|white"}],
-  "dre": {
-    "receita_bruta":0,"deducoes":0,"receita_liquida":0,"cmv":0,
-    "resultado_bruto":0,"despesas_operacionais":0,"resultado_financeiro":0,"lucro_liquido":0,
-    "margem_bruta_pct":0,"margem_ebit_pct":0,"margem_liquida_pct":0
-  },
-  "balanco": {
-    "ativo_total":0,"ativo_circulante":0,"estoques":0,"cartoes_receber":0,
-    "disponibilidades":0,"aplicacoes":0,"outros_ativo_circ":0,"ativo_nao_circ":0,
-    "passivo_circulante":0,"fornecedores":0,"obrig_fiscais":0,"obrig_trabalhistas":0,
-    "provisoes":0,"outros_passivo_circ":0,"passivo_lp":0,"patrimonio_liquido":0
-  },
-  "scorecard": [{"nome":"string","valor":"string","benchmark":"string","status":"ok|warn|danger","observacao":"string"}],
-  "insights": [{"tipo":"danger|warn|ok","titulo":"string","texto":"string"}],
-  "analise_completa": "string com análise estratégica completa em markdown. Inclua: Sumário executivo, Diagnóstico da DRE, Diagnóstico do Balanço, Cruzamento das duas demonstrações, Pontos críticos e fortalezas. Mínimo 600 palavras."
-}
-
-REGRAS: valores monetários em milhões (number), percentuais como decimal (20.7 para 20,7%), scorecard mínimo 10 indicadores, insights mínimo 4 itens. Retorne APENAS o JSON.`;
-
-    parts.push({ text: prompt });
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts }] })
-      }
-    );
-
-    clearInterval(iv);
-
-    if(!response.ok){
-      const err = await response.json();
-      throw new Error(err.error?.message || 'Erro na API Gemini');
-    }
-
-    const data = await response.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    dashData = JSON.parse(clean);
-
-    renderDashboard(dashData);
-    showScreen('dashboard');
-
-  } catch(err){
-    clearInterval(iv);
-    showScreen('upload');
-    alert('Erro: ' + err.message + '\n\nVerifique sua chave Gemini em aistudio.google.com/apikey');
-  }
-}
-
-function fmt(n){ if(n===undefined||n===null) return '—'; return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}); }
-function corVal(c){ return c==='red'?'r':c==='amber'?'a':c==='green'?'g':''; }
-
-function renderDashboard(d){
-  const dre = d.dre || {};
-  const b = d.balanco || {};
-
-  document.getElementById('dh-badge').textContent = '⚠ ' + (d.alerta_badge||'ANÁLISE');
-  document.getElementById('dh-title').textContent = 'Dashboard · ' + (d.empresa||'Supermercado');
-  document.getElementById('dh-sub').textContent = d.periodo||'';
-  document.getElementById('sum-title').textContent = d.summary_title||'Diagnóstico';
-  document.getElementById('sum-text').textContent = d.summary_text||'';
-
-  document.getElementById('kpi-main').innerHTML = (d.kpis_principais||[]).map(k=>`
-    <div class="kcard"><div class="klabel">${k.label}</div><div class="kval ${corVal(k.cor)}">${k.valor}</div><div class="ksub">${k.sub||''}</div></div>`).join('');
-
-  document.getElementById('kpi-dre').innerHTML = `
-    <div class="kcard"><div class="klabel">Receita bruta</div><div class="kval">R$ ${fmt(dre.receita_bruta)}M</div></div>
-    <div class="kcard"><div class="klabel">Receita líquida</div><div class="kval">R$ ${fmt(dre.receita_liquida)}M</div></div>
-    <div class="kcard"><div class="klabel">CMV</div><div class="kval a">R$ ${fmt(dre.cmv)}M</div><div class="ksub">${dre.receita_liquida?((dre.cmv/dre.receita_liquida)*100).toFixed(1):'—'}% rec.líq.</div></div>
-    <div class="kcard"><div class="klabel">Resultado bruto</div><div class="kval">R$ ${fmt(dre.resultado_bruto)}M</div><div class="ksub">Margem ${fmt(dre.margem_bruta_pct)}%</div></div>
-    <div class="kcard"><div class="klabel">Desp. operacionais</div><div class="kval r">R$ ${fmt(dre.despesas_operacionais)}M</div></div>
-    <div class="kcard"><div class="klabel">Lucro líquido</div><div class="kval ${(dre.lucro_liquido||0)>0?'g':'r'}">R$ ${fmt(dre.lucro_liquido)}M</div><div class="ksub">Margem ${fmt(dre.margem_liquida_pct)}%</div></div>`;
-
-  const lc = b.ativo_circulante&&b.passivo_circulante?(b.ativo_circulante/b.passivo_circulante).toFixed(2):'—';
-  const ls = b.ativo_circulante&&b.passivo_circulante&&b.estoques?((b.ativo_circulante-b.estoques)/b.passivo_circulante).toFixed(2):'—';
-  document.getElementById('kpi-balanco').innerHTML = `
-    <div class="kcard"><div class="klabel">Ativo total</div><div class="kval">R$ ${fmt(b.ativo_total)}M</div></div>
-    <div class="kcard"><div class="klabel">Estoques</div><div class="kval a">R$ ${fmt(b.estoques)}M</div><div class="ksub">${b.ativo_circulante?((b.estoques/b.ativo_circulante)*100).toFixed(1):'—'}% do AC</div></div>
-    <div class="kcard"><div class="klabel">Liquidez corrente</div><div class="kval a">${lc}</div></div>
-    <div class="kcard"><div class="klabel">Liquidez seca</div><div class="kval r">${ls}</div></div>
-    <div class="kcard"><div class="klabel">Fornecedores</div><div class="kval a">R$ ${fmt(b.fornecedores)}M</div></div>
-    <div class="kcard"><div class="klabel">Patrimônio líquido</div><div class="kval g">R$ ${fmt(b.patrimonio_liquido)}M</div></div>`;
-
-  const funnelSteps = [
-    {label:'Receita bruta', val:`R$ ${fmt(dre.receita_bruta)}M`, pct:100, color:'#378ADD', obs:''},
-    {label:'(-) Deduções', val:`R$ ${fmt(dre.deducoes)}M`, pct:Math.max(dre.deducoes/dre.receita_bruta*100,2)||10, color:'#888780', obs:''},
-    {label:'= Receita líquida', val:`R$ ${fmt(dre.receita_liquida)}M`, pct:dre.receita_liquida/dre.receita_bruta*100||90, color:'#85B7EB', obs:''},
-    {label:'(-) CMV', val:`R$ ${fmt(dre.cmv)}M`, pct:dre.cmv/dre.receita_bruta*100||71, color:'#E17055', obs:`${fmt(dre.margem_bruta_pct?100-dre.margem_bruta_pct:79.3)}% da rec.líq.`},
-    {label:'= Resultado bruto', val:`R$ ${fmt(dre.resultado_bruto)}M`, pct:Math.max(dre.resultado_bruto/dre.receita_bruta*100,1)||20, color:'#639922', obs:`Margem ${fmt(dre.margem_bruta_pct)}%`},
-    {label:'(-) Desp. operac.', val:`R$ ${fmt(dre.despesas_operacionais)}M`, pct:Math.max(dre.despesas_operacionais/dre.receita_bruta*100,1)||20, color:'#D63031', obs:''},
-    {label:'= Lucro líquido', val:`R$ ${fmt(dre.lucro_liquido)}M`, pct:Math.max(dre.lucro_liquido/dre.receita_bruta*100,0.2)||0.5, color:'#00B894', obs:`Margem ${fmt(dre.margem_liquida_pct)}%`},
-  ];
-  document.getElementById('funnel-body').innerHTML = funnelSteps.map(s=>`
-    <div class="fr">
-      <div class="fl">${s.label}</div>
-      <div class="fb-w"><div class="fb" style="width:${Math.min(s.pct,100)}%;background:${s.color};min-width:${s.val.length*6}px"><span class="fv">${s.val}</span></div></div>
-      ${s.obs?`<span class="fo">${s.obs}</span>`:''}
-    </div>`).join('');
-
-  const sc = d.scorecard||[];
-  let ok=0,warn=0,danger=0;
-  sc.forEach(s=>{if(s.status==='ok')ok++;else if(s.status==='warn')warn++;else danger++;});
-  document.getElementById('sc-ok').textContent=ok;
-  document.getElementById('sc-warn').textContent=warn;
-  document.getElementById('sc-danger').textContent=danger;
-  document.getElementById('sc-rows').innerHTML=sc.map(s=>`
-    <div class="sr">
-      <div><div class="sn">${s.nome}</div><div class="so">${s.observacao||''}</div></div>
-      <div class="sv" style="color:${s.status==='ok'?'#00B894':s.status==='warn'?'#E17055':'#D63031'}">${s.valor}</div>
-      <div class="sbv">${s.benchmark}</div>
-      <div><span class="sb ${s.status==='ok'?'ok':s.status==='warn'?'w':'d'}">${s.status==='ok'?'OK':s.status==='warn'?'Atenção':'Crítico'}</span></div>
-    </div>`).join('');
-
-  document.getElementById('insight-cards').innerHTML=(d.insights||[]).map(i=>`
-    <div class="ic ${i.tipo==='ok'?'g':i.tipo==='warn'?'w':'d'}">
-      <div class="ih"><div class="ii ${i.tipo==='ok'?'g':i.tipo==='warn'?'w':'d'}">
-        ${i.tipo==='ok'?'✓':i.tipo==='warn'?'!':'✕'}
-      </div><div class="it">${i.titulo}</div></div>
-      <div class="ib">${i.texto}</div>
-    </div>`).join('');
-
-  const analise = d.analise_completa||'';
-  document.getElementById('ai-content').innerHTML = analise
-    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
-    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/^- (.+)$/gm,'<li>$1</li>')
-    .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/^(?!<[hul])(.+)$/gm,'<p>$1</p>');
-
-  const ativoLabels=['Estoques','Cartões','Aplicações','Outros'];
-  const ativoData=[b.estoques,b.cartoes_receber,b.aplicacoes,b.outros_ativo_circ];
-  const ativoColors=['#D63031','#0984E3','#00B894','#888780'];
-  document.getElementById('leg-ativo').innerHTML=ativoLabels.map((l,i)=>`<span class="li"><span class="ld" style="background:${ativoColors[i]}"></span>${l}: R$ ${fmt(ativoData[i])}M</span>`).join('');
-
-  const passLabels=['Fornecedores','Provisões','Fiscal','Outros'];
-  const passData=[b.fornecedores,b.provisoes,b.obrig_fiscais,b.outros_passivo_circ];
-  const passColors=['#E17055','#0984E3','#00B894','#888780'];
-  document.getElementById('leg-passivo').innerHTML=passLabels.map((l,i)=>`<span class="li"><span class="ld" style="background:${passColors[i]}"></span>${l}: R$ ${fmt(passData[i])}M</span>`).join('');
-
-  setTimeout(()=>renderCharts(d),100);
-}
-
-function renderCharts(d){
-  const dre=d.dre||{};const b=d.balanco||{};
-  function kc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
-
-  kc('c-margens');
-  charts['c-margens']=new Chart(document.getElementById('c-margens'),{type:'bar',data:{labels:['Margem bruta','Margem EBIT','Margem líquida'],datasets:[{label:'Empresa',data:[dre.margem_bruta_pct,dre.margem_ebit_pct,dre.margem_liquida_pct],backgroundColor:'#0984E3',borderRadius:4},{label:'Mín.',data:[22,3,1],backgroundColor:'rgba(255,255,255,0.1)',borderRadius:4},{label:'Máx.',data:[26,6,3],backgroundColor:'rgba(255,255,255,0.05)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8D9EB5',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8D9EB5',callback:v=>v+'%'}}}}});
-
+function initAll(){
   kc('c-liq');
-  const lc=b.ativo_circulante&&b.passivo_circulante?+(b.ativo_circulante/b.passivo_circulante).toFixed(2):1.67;
-  const ls=b.ativo_circulante&&b.passivo_circulante&&b.estoques?+((b.ativo_circulante-b.estoques)/b.passivo_circulante).toFixed(2):0.81;
-  charts['c-liq']=new Chart(document.getElementById('c-liq'),{type:'bar',data:{labels:['Liquidez corrente','Liquidez seca'],datasets:[{label:'Empresa',data:[lc,ls],backgroundColor:['#E17055','#D63031'],borderRadius:6},{label:'Ref.',data:[1.5,1.0],backgroundColor:['rgba(0,184,148,0.2)','rgba(0,184,148,0.2)'],borderRadius:6,borderWidth:1,borderColor:['#00B894','#00B894']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8D9EB5'}},y:{min:0,max:2.2,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8D9EB5'}}}}});
+  ch['c-liq']=new Chart(ge('c-liq'),{type:'bar',data:{labels:['Liquidez corrente','Liquidez seca'],datasets:[{label:'Empresa',data:[1.67,0.81],backgroundColor:[C.amber,C.red],borderRadius:6},{label:'Ref.',data:[1.5,1.0],backgroundColor:['rgba(0,184,148,.2)','rgba(0,184,148,.2)'],borderRadius:6,borderWidth:1,borderColor:[C.green,C.green]}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{min:0,max:2.2,grid:{color:gridColor},ticks:{color:tickColor}}}}});
 
-  kc('c-result');
-  charts['c-result']=new Chart(document.getElementById('c-result'),{type:'bar',data:{labels:['Res. bruto','Desp. op.','Rec. financ.','Lucro líq.'],datasets:[{data:[dre.resultado_bruto,dre.despesas_operacionais,dre.resultado_financeiro,dre.lucro_liquido],backgroundColor:['#639922','#D63031','#0984E3','#00B894'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8D9EB5',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8D9EB5',callback:v=>'R$'+v+'M'}}}}});
+  kc('c-receita');
+  ch['c-receita']=new Chart(ge('c-receita'),{type:'bar',data:{labels:anos,datasets:[{label:'Receita bruta',data:RB,backgroundColor:C.blue,borderRadius:4},{label:'Receita líquida',data:RL,backgroundColor:C.blue2,borderRadius:4},{label:'Resultado bruto',data:RBR,backgroundColor:C.green,borderRadius:4}]},options:{...baseOpts,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
 
-  const gapBruta=dre.margem_bruta_pct?+(22-dre.margem_bruta_pct).toFixed(2):1.3;
-  const gapEbit=dre.margem_ebit_pct?+(3-dre.margem_ebit_pct).toFixed(2):2.0;
-  const gapLiq=dre.margem_liquida_pct?+(1-dre.margem_liquida_pct).toFixed(2):0.5;
-  kc('c-gap');
-  charts['c-gap']=new Chart(document.getElementById('c-gap'),{type:'bar',data:{labels:['Margem bruta','Margem EBIT','Margem líquida'],datasets:[{data:[-gapBruta,-gapEbit,-gapLiq],backgroundColor:['#D63031','#D63031','#D63031'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8D9EB5',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8D9EB5',callback:v=>v+'pp'}}}}});
+  kc('c-lucro');
+  ch['c-lucro']=new Chart(ge('c-lucro'),{type:'bar',data:{labels:anos,datasets:[{label:'Lucro líquido',data:LUC,backgroundColor:LUC.map(v=>v===2.92?C.red:C.green),borderRadius:6}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+
+  kc('c-margens-evo');
+  ch['c-margens-evo']=new Chart(ge('c-margens-evo'),{type:'line',data:{labels:anos,datasets:[{label:'Margem bruta %',data:MB,borderColor:C.amber,backgroundColor:'rgba(225,112,85,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.amber},{label:'Margem líquida %',data:ML,borderColor:C.red,backgroundColor:'rgba(214,48,49,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.red},{label:'EBIT %',data:EBIT,borderColor:C.blue,backgroundColor:'rgba(9,132,227,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.blue}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>v+'%'}}}}});
+
+  kc('c-balanco-evo');
+  ch['c-balanco-evo']=new Chart(ge('c-balanco-evo'),{type:'line',data:{labels:anos,datasets:[{label:'Ativo total',data:AT,borderColor:C.blue,tension:.3,pointRadius:4,pointBackgroundColor:C.blue,fill:false},{label:'PL',data:PL,borderColor:C.green,tension:.3,pointRadius:4,pointBackgroundColor:C.green,fill:false},{label:'Estoques',data:EST,borderColor:C.amber,tension:.3,pointRadius:4,pointBackgroundColor:C.amber,fill:false,borderDash:[5,3]},{label:'Fornecedores',data:FORN,borderColor:C.red,tension:.3,pointRadius:4,pointBackgroundColor:C.red,fill:false,borderDash:[5,3]}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+
+  kc('c-desp-evo');
+  ch['c-desp-evo']=new Chart(ge('c-desp-evo'),{type:'line',data:{labels:anos,datasets:[{label:'Resultado bruto',data:RBR,borderColor:C.green,tension:.3,pointRadius:4,pointBackgroundColor:C.green,fill:false},{label:'Desp. operacionais',data:DOP,borderColor:C.red,tension:.3,pointRadius:4,pointBackgroundColor:C.red,fill:false}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+
+  kc('c-fin-evo');
+  ch['c-fin-evo']=new Chart(ge('c-fin-evo'),{type:'line',data:{labels:anos,datasets:[{label:'Receita financeira',data:RFIN,borderColor:C.blue,tension:.3,pointRadius:4,pointBackgroundColor:C.blue,fill:false},{label:'Lucro líquido',data:LUC,borderColor:C.green,tension:.3,pointRadius:4,pointBackgroundColor:C.green,fill:false}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+
+  kc('c-dre-comp');
+  ch['c-dre-comp']=new Chart(ge('c-dre-comp'),{type:'bar',data:{labels:anos,datasets:[{label:'Rec. bruta',data:RB,backgroundColor:C.blue,borderRadius:3},{label:'CMV',data:CMV,backgroundColor:C.amber,borderRadius:3},{label:'Desp.op.',data:DOP,backgroundColor:C.red,borderRadius:3},{label:'Lucro',data:LUC,backgroundColor:C.green,borderRadius:3}]},options:{...baseOpts,plugins:{legend:{labels:{color:tickColor,font:{size:10},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+
+  kc('c-index');
+  const idx = arr => arr.map(v=>(v/arr[0]*100).toFixed(1));
+  ch['c-index']=new Chart(ge('c-index'),{type:'line',data:{labels:anos,datasets:[{label:'Receita bruta',data:idx(RB),borderColor:C.blue,tension:.3,pointRadius:3,fill:false},{label:'Desp.operacionais',data:idx(DOP),borderColor:C.red,tension:.3,pointRadius:3,fill:false},{label:'CMV',data:idx(CMV),borderColor:C.amber,tension:.3,pointRadius:3,fill:false}]},options:{...baseOpts,plugins:{legend:{labels:{color:tickColor,font:{size:10},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>v}}}}});
 
   kc('c-ativo');
-  charts['c-ativo']=new Chart(document.getElementById('c-ativo'),{type:'doughnut',data:{labels:['Estoques','Cartões','Aplicações','Outros'],datasets:[{data:[b.estoques,b.cartoes_receber,b.aplicacoes,b.outros_ativo_circ],backgroundColor:['#D63031','#0984E3','#00B894','#888780'],borderWidth:2,borderColor:'#1B2D3F'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` R$ ${fmt(ctx.parsed)}M`}}}}});
+  ch['c-ativo']=new Chart(ge('c-ativo'),{type:'doughnut',data:{labels:['Estoques','Cartões','Aplicações','Outros'],datasets:[{data:[51.0,26.2,8.0,13.5],backgroundColor:[C.red,C.blue,C.green,'#8D9EB5'],borderWidth:2,borderColor:'#1B2D3F'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` R$ ${ctx.parsed.toFixed(1)}M`}}}}});
 
   kc('c-passivo');
-  charts['c-passivo']=new Chart(document.getElementById('c-passivo'),{type:'doughnut',data:{labels:['Fornecedores','Provisões','Fiscal','Outros'],datasets:[{data:[b.fornecedores,b.provisoes,b.obrig_fiscais,b.outros_passivo_circ],backgroundColor:['#E17055','#0984E3','#00B894','#888780'],borderWidth:2,borderColor:'#1B2D3F'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` R$ ${fmt(ctx.parsed)}M`}}}}});
+  ch['c-passivo']=new Chart(ge('c-passivo'),{type:'doughnut',data:{labels:['Fornecedores','Provisões','Fiscal','Outros'],datasets:[{data:[46.8,5.4,3.6,3.4],backgroundColor:[C.amber,C.blue,C.green,'#8D9EB5'],borderWidth:2,borderColor:'#1B2D3F'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` R$ ${ctx.parsed.toFixed(1)}M`}}}}});
+
+  kc('c-giro');
+  ch['c-giro']=new Chart(ge('c-giro'),{type:'bar',data:{labels:['Empresa 2025','Ideal setor','Máx. aceitável'],datasets:[{data:[42,25,35],backgroundColor:[C.red,C.green,C.amber],borderRadius:6}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>v+' dias'}}}}});
+
+  kc('c-recv');
+  ch['c-recv']=new Chart(ge('c-recv'),{type:'bar',data:{labels:['Recebíveis + caixa','Fornecedores'],datasets:[{data:[45.2,46.8],backgroundColor:[C.blue,C.red],borderRadius:6}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
 }
 
-const panels=['visao','dre','balanco','scorecard','diagnostico'];
-function sw(id,e){
-  document.querySelectorAll('.d-tab').forEach((t,i)=>t.classList.toggle('on',panels[i]===id));
+const sc = [
+  {n:'Margem bruta',o:'Perdeu 2,1pp em 5 anos — pressão crescente no CMV',v:'20,7%',b:'22–26%',s:'w'},
+  {n:'Margem operacional (EBIT)',o:'1ª vez abaixo de 2% — tendência de queda há 5 anos',v:'1,02%',b:'3–6%',s:'d'},
+  {n:'Margem líquida',o:'Mínimo histórico — era 2,91% em 2020',v:'0,52%',b:'1–3%',s:'d'},
+  {n:'ROE — retorno sobre PL',o:'Muito abaixo da remuneração esperada pelos sócios',v:'4,4%',b:'10–20%',s:'w'},
+  {n:'Liquidez corrente',o:'Dentro do range — mas sustentada por estoques',v:'1,67',b:'1,5–2,0',s:'ok'},
+  {n:'Liquidez seca',o:'Abaixo de 1,0 — empresa depende do giro diário',v:'0,81',b:'1,0–1,5',s:'d'},
+  {n:'Índice de endividamento',o:'Saudável — sem endividamento bancário expressivo',v:'48,4%',b:'50–70%',s:'ok'},
+  {n:'Autonomia financeira (PL/Ativo)',o:'51,6% — solidez patrimonial comprovada',v:'51,6%',b:'≥ 30–50%',s:'ok'},
+  {n:'Prazo médio de estoque',o:'40% acima do ideal — capital de giro comprometido',v:'42 dias',b:'20–30 dias',s:'w'},
+  {n:'Cobertura de fornecedores',o:'Dependência concentrada — risco de ruptura comercial',v:'79,1%',b:'40–65%',s:'w'},
+  {n:'Estoque / Ativo circulante',o:'Capital excessivo em mercadorias',v:'51,7%',b:'30–40%',s:'w'},
+  {n:'PL / Ativo imobilizado',o:'2,47x — solidez estrutural preservada',v:'2,47x',b:'≥ 1,0x',s:'ok'},
+  {n:'Rec. financeira / Lucro líquido',o:'Era 64% em 2020 — hoje 405%, risco sistêmico',v:'405%',b:'≤ 20–40%',s:'d'},
+];
+
+document.getElementById('sc-rows').innerHTML=sc.map(s=>`
+  <div class="sr">
+    <div><div class="sn">${s.n}</div><div class="so">${s.o}</div></div>
+    <div class="sv" style="color:${s.s==='ok'?'#00B894':s.s==='w'?'#E17055':'#D63031'}">${s.v}</div>
+    <div class="sbv">${s.b}</div>
+    <div><span class="sb ${s.s==='ok'?'ok':s.s==='w'?'w':'d'}">${s.s==='ok'?'OK':s.s==='w'?'Atenção':'Crítico'}</span></div>
+  </div>`).join('');
+
+const panels=['visao','evolucao','dre','balanco','ciclo','scorecard','diagnostico'];
+function sw(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
   panels.forEach(p=>document.getElementById('p-'+p).classList.toggle('on',p===id));
-  if(dashData) setTimeout(()=>renderCharts(dashData),60);
+  setTimeout(initAll,80);
 }
 
-function showScreen(s){
-  document.getElementById('upload-screen').style.display=s==='upload'?'flex':'none';
-  document.getElementById('loading-screen').style.display=s==='loading'?'flex':'none';
-  document.getElementById('dash-screen').style.display=s==='dashboard'?'block':'none';
-}
-
-function resetApp(){files=[];dashData=null;document.getElementById('file-list').innerHTML='';checkReady();showScreen('upload');}
+setTimeout(initAll,400);
 </script>
 </body>
 </html>
