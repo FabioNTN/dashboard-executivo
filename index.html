@@ -593,22 +593,22 @@ body{font-family:var(--font);background:var(--navy);color:#E8EDF2;min-height:100
 </div>
  
 <script>
-const anos = ['2020','2021','2022','2023','2025'];
-const RB   = [274.59, 303.16, 359.00, 559.92, 624.12];
-const RL   = [248.97, 270.83, 322.61, 504.93, 559.80];
-const CMV  = [192.16, 211.14, 254.72, 398.87, 444.16];
-const RBR  = [56.81,  59.69,  67.89, 106.06, 115.90];
-const DOP  = [45.41,  49.09,  58.73,  99.96, 120.48];
-const RFIN = [4.70,   3.40,   4.83,  10.28,  11.82];
-const LUC  = [7.25,   7.19,   8.02,   8.54,   2.92];
-const MB   = [22.8,   22.0,   21.1,   21.0,   20.7];
-const ML   = [2.91,   2.66,   2.35,   1.69,   0.52];
-const EBIT = [4.58,   4.20,   3.86,   2.73,   1.02];
+const anos = ['2020','2021','2022','2023','2024','2025'];
+const RB   = [274.59, 303.16, 359.00, 559.92, 604.16, 624.12];
+const RL   = [248.97, 270.83, 322.61, 504.93, 545.83, 559.80];
+const CMV  = [192.16, 211.14, 254.72, 398.87, 429.83, 444.16];
+const RBR  = [56.81,  59.69,  67.89, 106.06, 116.00, 115.90];
+const DOP  = [45.41,  49.09,  58.73,  99.96, 109.19, 120.48];
+const RFIN = [4.70,   3.40,   4.83,  10.28,  12.06,  11.82];
+const LUC  = [7.25,   7.19,   8.02,   8.54,  11.27,   2.92];
+const MB   = [22.8,   22.0,   21.1,   21.0,   21.3,   20.7];
+const ML   = [2.91,   2.66,   2.35,   1.69,   2.07,   0.52];
+const EBIT = [4.58,   4.20,   3.86,   2.73,   3.29,   1.02];
  
-const AT   = [50.83, 67.75, 75.56, 116.13, 128.35];
-const PL   = [21.65, 27.94, 34.35,  55.00,  66.22];
-const EST  = [17.87, 26.58, 30.94,  46.93,  50.99];
-const FORN = [15.98, 24.19, 27.17,  40.00,  46.84];
+const AT   = [50.83, 67.75, 75.56, 116.13, 125.38, 128.35];
+const PL   = [21.65, 27.94, 34.35,  55.00,  67.77,  66.22];
+const EST  = [17.87, 26.58, 30.94,  46.93,  55.06,  50.99];
+const FORN = [15.98, 24.19, 27.17,  40.00,  40.79,  46.84];
  
 const C = {blue:'#0984E3',blue2:'#378ADD',green:'#00B894',amber:'#E17055',red:'#D63031',gray:'#8D9EB5',navy:'#1B2D3F',white:'#E8EDF2'};
 const gridColor = 'rgba(255,255,255,0.05)';
@@ -628,7 +628,7 @@ function initAll(){
   ch['c-receita']=new Chart(ge('c-receita'),{type:'bar',data:{labels:anos,datasets:[{label:'Receita bruta',data:RB,backgroundColor:C.blue,borderRadius:4},{label:'Receita líquida',data:RL,backgroundColor:C.blue2,borderRadius:4},{label:'Resultado bruto',data:RBR,backgroundColor:C.green,borderRadius:4}]},options:{...baseOpts,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
  
   kc('c-lucro');
-  ch['c-lucro']=new Chart(ge('c-lucro'),{type:'bar',data:{labels:anos,datasets:[{label:'Lucro líquido',data:LUC,backgroundColor:LUC.map(v=>v===2.92?C.red:C.green),borderRadius:6}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
+  ch['c-lucro']=new Chart(ge('c-lucro'),{type:'bar',data:{labels:anos,datasets:[{label:'Lucro líquido',data:LUC,backgroundColor:LUC.map(v=>v<5?C.red:C.green),borderRadius:6}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>'R$'+v+'M'}}}}});
  
   kc('c-margens-evo');
   ch['c-margens-evo']=new Chart(ge('c-margens-evo'),{type:'line',data:{labels:anos,datasets:[{label:'Margem bruta %',data:MB,borderColor:C.amber,backgroundColor:'rgba(225,112,85,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.amber},{label:'Margem líquida %',data:ML,borderColor:C.red,backgroundColor:'rgba(214,48,49,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.red},{label:'EBIT %',data:EBIT,borderColor:C.blue,backgroundColor:'rgba(9,132,227,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.blue}]},options:{...baseOpts,scales:{x:{grid:{display:false},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor,callback:v=>v+'%'}}}}});
@@ -698,4 +698,3 @@ setTimeout(initAll,400);
 </script>
 </body>
 </html>
- 
