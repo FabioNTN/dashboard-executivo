@@ -167,9 +167,8 @@ body{font-family:var(--font);background:var(--navy);color:#E8EDF2;min-height:100
   <div class="header-left">
     <div class="header-logo">Supermercados</div>
     <div class="header-period">Análise 2020–2025</div>
-    <div class="header-alert">⚠ MARGEM CRÍTICA 2025</div>
   </div>
-  <div style="font-size:11px;color:var(--gray)">Dashboard Executivo · Varejo Supermercados</div>
+  <div style="font-size:11px;color:var(--gray)">Dashboard Executivo</div>
 </div>
 
 <div class="hero">
@@ -205,9 +204,6 @@ body{font-family:var(--font);background:var(--navy);color:#E8EDF2;min-height:100
       <div class="hc-sub">Operação deficitária</div>
     </div>
   </div>
-  <div class="hero-headline">
-    <strong>O paradoxo 2025:</strong> a empresa triplicou o faturamento em 5 anos (R$ 274M → R$ 624M), mas a margem líquida caiu de 2,91% para 0,52% — o menor nível histórico. O crescimento não veio acompanhado de eficiência operacional. <strong>Em 2024 o lucro foi de R$ 11,3M — em 2025 despencou 74% para R$ 2,9M. As despesas operacionais superaram o resultado bruto pela primeira vez na história.</strong>
-  </div>
 </div>
 
 <div class="tabs-wrap">
@@ -218,8 +214,6 @@ body{font-family:var(--font);background:var(--navy);color:#E8EDF2;min-height:100
     <button class="tab" onclick="sw('balanco',this)">Balanço</button>
     <button class="tab" onclick="sw('ciclo',this)">Ciclo Financeiro</button>
     <button class="tab" onclick="sw('scorecard',this)">Scorecard</button>
-    <button class="tab" onclick="sw('diagnostico',this)">Diagnóstico</button>
-    <button class="tab" onclick="sw('plano',this)">Plano de Ação</button>
   </div>
 </div>
 
@@ -912,7 +906,7 @@ document.getElementById('sc-rows').innerHTML=sc.map(s=>`
     <div><span class="sb ${s.s==='ok'?'ok':s.s==='w'?'w':'d'}">${s.s==='ok'?'OK':s.s==='w'?'Atenção':'Crítico'}</span></div>
   </div>`).join('');
 
-const panels=['visao','evolucao','dre','balanco','ciclo','scorecard','diagnostico','plano'];
+const panels=['visao','evolucao','dre','balanco','ciclo','scorecard'];
 function sw(id,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
